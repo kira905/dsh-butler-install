@@ -1,0 +1,37 @@
+清单：<ENV>\suite-manifest.json
+共 4 项，本次选中 4 项（组：核心 / CLI）
+数据根：<ENV>\home
+profile：fixture（已存在）
+全局包落点：<ENV>\npm-global（来源：--npm-prefix）
+⏭ 不可安装项 fake-aggregate-repo：仓根没有 package.json，不是可安装的包
+
+建议顺序（组件之间没有代码依赖，"顺序"只是排查建议）：先装面板 → 界面增强 → 记忆 → 命令行工具一批。
+
+本档 = 演练（默认 dry-run）：下面每条命令都不会被执行，只打印"将要跑什么"与"每步拿什么判据"。
+
+[1/4] 核心 · @fake/plug-a
+  类型：plugin · 挂载：auto · 期望版本：>= 0.1.0 且 < 0.2.0
+  现状：已装 0.1.0
+  动作：跳过（已满足）
+
+[2/4] 核心 · @fake/plug-b
+  类型：plugin · 挂载：auto · 期望版本：>= 0.1.0 且 < 0.2.0
+  现状：未安装
+  动作：安装
+  命令：dsh plugin --profile fixture add @fake/plug-b@^0.1.0
+  判据：profile 的 node_modules/@fake/plug-b/package.json 存在（只查文件，不执行） · 实体版本落在 >= 0.1.0 且 < 0.2.0 · dump-config 里组合头恰好 1 行、条目 name 恰好 1 条、该 id 在整棵树里恰好 1 次
+
+[3/4] CLI · @fake/cli-a
+  类型：cli · 期望版本：>= 0.1.0 且 < 0.2.0
+  现状：未安装
+  动作：安装
+  命令：npm i -g @fake/cli-a@^0.1.0
+  判据：命令文件 cli-a 在 .bin 或全局前缀下存在（只查文件，不执行） · 实体版本落在 >= 0.1.0 且 < 0.2.0
+
+[4/4] CLI · @fake/cli-b
+  类型：cli · 期望版本：>= 0.1.0 且 < 0.2.0
+  现状：已装 0.1.0
+  动作：跳过（已满足）
+
+演练结束：将执行 2 条命令，跳过 2 项（已满足）。
+加 --apply 才真跑；只想装一部分用 --only <组名/包名/别名>。

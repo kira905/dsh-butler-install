@@ -9,6 +9,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs, HELP_TEXT, EXIT } from '../lib/cli-args.mjs';
 import { runSuite } from '../lib/run.mjs';
+import { runUiCli } from '../lib/ui-server.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 
@@ -33,6 +34,9 @@ if (options.help) {
   for (const e of errors) process.stderr.write(`✖ ${e}\n`);
   process.stderr.write('用 --help 看可用参数。\n');
   process.exitCode = EXIT.USAGE;
+} else if (options.ui) {
+  // 向导页：只读、只绑 127.0.0.1、只有 GET。起完就挂着，Ctrl+C 结束（不留后台服务）
+  process.exitCode = await runUiCli(options);
 } else {
   const { exitCode, summary } = await runSuite(options);
   if (options.json) {

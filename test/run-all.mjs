@@ -13,6 +13,8 @@ const modules = [
   'test-dryrun.mjs',
   'test-apply.mjs',
   'test-rollback.mjs',
+  'test-ui.mjs',
+  'test-mutation-ui.mjs',
 ];
 
 let pass = 0;
