@@ -1,0 +1,29 @@
+{
+  "name": "@kira905/dsh-butler-install",
+  "version": "0.1.0",
+  "description": "Thin installer for the DSH butler suite: one command installs the plugin + CLI bundle through the host's own commands, then tells you whether it actually took effect, and can roll the whole batch back.",
+  "type": "module",
+  "license": "MIT",
+  "bin": {
+    "dsh-butler-install": "bin/dsh-butler-install.mjs",
+    "dsh-butler-install-probe-scan": "bin/probe-scan.mjs"
+  },
+  "files": [
+    "bin/",
+    "lib/",
+    "suite-manifest.json",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "keywords": [
+    "dsh",
+    "installer",
+    "manifest",
+    "rollback"
+  ],
+  "scripts": {
+    "test": "node test/run-all.mjs"
+  }
+}

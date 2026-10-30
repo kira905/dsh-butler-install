@@ -1,0 +1,163 @@
+{
+  "schemaVersion": 1,
+  "suite": "kira905-butler-suite",
+  "description": "大管家全家桶的装机清单 = 单一真相。安装器（dsh-butler-install）与装后自检（dsh-butler-core 的 selfcheck-replica）读的是同一份：安装器用它决定装什么、怎么算装好；自检用它决定查什么、怎么算绿。期望版本一律写成区间（^x.y.z），因为宿主落进 profile 的是区间不是精确版本。",
+  "items": [
+    {
+      "name": "@kira905/dsh-ecosystem-panel",
+      "versionRange": "^0.4.5",
+      "type": "plugin",
+      "group": "核心",
+      "mount": "auto",
+      "aliases": ["面板", "生态面板"],
+      "probe": { "kind": "existence" },
+      "note": "只读体检面板（服务端 + 客户端）。排在最前面装：后面装的东西对不对，靠它看。装完即挂载，不需要写 cordis.patch.yml。"
+    },
+    {
+      "name": "@kira905/dsh-butler-archive",
+      "versionRange": "^0.3.5",
+      "type": "plugin",
+      "group": "界面",
+      "mount": "auto",
+      "aliases": ["归档", "会话归档"],
+      "probe": { "kind": "existence" },
+      "note": "会话归档界面（服务端 + 客户端）。装完即挂载。"
+    },
+    {
+      "name": "@kira905/dsh-session-title-live",
+      "versionRange": "^0.2.5",
+      "type": "plugin",
+      "group": "界面",
+      "mount": "auto",
+      "aliases": ["标题", "会话标题"],
+      "probe": { "kind": "existence" },
+      "note": "服务端插件：会话标题随内容实时更新。装完即挂载。"
+    },
+    {
+      "name": "@kira905/dsh-host-adapter-client",
+      "versionRange": "^0.1.1",
+      "type": "plugin",
+      "group": "界面",
+      "mount": "manual",
+      "aliases": ["宿主适配"],
+      "probe": { "kind": "existence", "cmd": "dsh-host-adapter-deploy" },
+      "note": "只有客户端半，刻意不带 dsh.bundle：装进 profile 时会得到一行 declares no dsh.bundle 提示，这是设计如此、不是故障。真正的挂载由它自带的部署命令完成，本工具不替它挂，也不把它判红。"
+    },
+    {
+      "name": "@kira905/dsh-memory-toolkit",
+      "versionRange": "^0.1.2",
+      "type": "plugin",
+      "group": "记忆",
+      "mount": "auto",
+      "aliases": ["记忆"],
+      "probe": { "kind": "existence" },
+      "note": "记忆工具：自带一份记忆实现（子包 dsh-memory-local）+ 三个命令行。它与官方记忆插件抢同一个位置，二选一；装之前先看 profile 的组合列表里有没有官方那份。区间下界按注册表上真正装得到的版本写：现可得的那一版把 bundle 声明放在子包里，装完会装成普通依赖、挂载判据如实报 ⏭（不算通过）；带正确声明的版本发布后，这个区间会自动接受它，本项同时转为「必须挂载」。"
+    },
+    {
+      "name": "@kira905/dsh-board-toolkit",
+      "versionRange": "^0.1.2",
+      "type": "cli",
+      "group": "CLI",
+      "aliases": ["看板"],
+      "probe": { "kind": "existence", "cmd": "board-card" },
+      "note": "任务看板的命令行工具集。装它 = npm i -g，不进组合列表，那条 declares no dsh.bundle 提示是正常现象。"
+    },
+    {
+      "name": "@kira905/dsh-butler-core",
+      "versionRange": "^0.1.1",
+      "type": "cli",
+      "group": "CLI",
+      "aliases": ["核心", "大管家核心"],
+      "probe": { "kind": "existence", "cmd": "ops-tickd" },
+      "note": "大管家的调度与记账命令。注意 ops-tickd 是常驻调度，装完不是跑一次就完。"
+    },
+    {
+      "name": "@kira905/dsh-session-toolkit",
+      "versionRange": "^0.1.1",
+      "type": "cli",
+      "group": "CLI",
+      "aliases": ["会话"],
+      "probe": { "kind": "existence", "cmd": "dsh-session-tail" },
+      "note": "会话读取 / 落地 / 归档的命令行工具。"
+    },
+    {
+      "name": "@kira905/dsh-net-toolkit",
+      "versionRange": "^0.1.0",
+      "type": "cli",
+      "group": "CLI",
+      "aliases": ["网络"],
+      "probe": { "kind": "existence", "cmd": "dsh-wol" },
+      "note": "网络类命令：唤醒、浏览器抓取、本地网关桥。"
+    },
+    {
+      "name": "@kira905/dsh-notekit",
+      "versionRange": "^0.1.0",
+      "type": "cli",
+      "group": "CLI",
+      "aliases": ["笔记"],
+      "probe": { "kind": "existence", "cmd": "dsh-notekit-apply" },
+      "note": "笔记库套用的命令行工具。"
+    },
+    {
+      "name": "@kira905/dsh-nurse",
+      "versionRange": "^0.1.0",
+      "type": "cli",
+      "group": "体检",
+      "aliases": ["小护士", "体检"],
+      "probe": { "kind": "existence", "cmd": "dsh-nurse-verify" },
+      "note": "日常体检 / 采集 / 归档 / 回滚的命令行工具。"
+    },
+    {
+      "name": "@kira905/dsh-firstaid",
+      "versionRange": "^0.1.3",
+      "type": "cli",
+      "group": "体检",
+      "aliases": ["急救"],
+      "probe": { "kind": "existence", "cmd": "firstaid" },
+      "note": "急救台与回滚演练的命令行工具。"
+    },
+    {
+      "name": "@kira905/dsh-ops-toolkit",
+      "versionRange": "^0.1.0",
+      "type": "cli",
+      "group": "体检",
+      "aliases": ["运维"],
+      "probe": { "kind": "existence", "cmd": "dsh-bootstrap" },
+      "note": "开机自检、升级体检、夜间保护、快照等运维命令。"
+    },
+    {
+      "name": "@kira905/dsh-quality-toolkit",
+      "versionRange": "^0.1.1",
+      "type": "cli",
+      "group": "体检",
+      "aliases": ["质量"],
+      "probe": { "kind": "existence", "cmd": "rulecheck" },
+      "note": "文档与代码的一致性检查命令集。主包是命令行工具；它还带一个默认关的插件子包（private，随主包 tarball 一起到），要启用得自己往 profile 的 cordis.patch.yml 里插一行。"
+    },
+    {
+      "name": "@kira905/dsh-closure-tools",
+      "versionRange": "^0.1.1",
+      "type": "cli",
+      "group": "体检",
+      "aliases": ["闭包"],
+      "probe": { "kind": "existence", "cmd": "closure-check" },
+      "note": "依赖闭包的体检与修复命令。"
+    },
+    {
+      "name": "@kira905/dsh-diagnostics-extra",
+      "versionRange": "^0.1.0",
+      "type": "cli",
+      "group": "体检",
+      "aliases": ["对账", "诊断"],
+      "probe": { "kind": "existence", "cmd": "dsh-why" },
+      "note": "会话图片对账、一次取全的诊断命令。"
+    }
+  ],
+  "excluded": [
+    {
+      "id": "dsh-diagnostic-tools",
+      "reason": "历史聚合仓，仓根没有 package.json，不是可安装的包；它里面两份子目录包的包名在 npm 上都取不到，且其中一个与已发布的作用域包同名不同域。别 git clone 它当安装源（会得到第二份来源）。要的这两件本清单已经单列了，装上即可。",
+      "installInstead": ["@kira905/dsh-closure-tools", "@kira905/dsh-diagnostics-extra"]
+    }
+  ]
+}
