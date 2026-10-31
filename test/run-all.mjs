@@ -19,6 +19,8 @@ const modules = [
   // 双击入口：探测式单实例（连起两次只得到一个服务）+ 纯 ASCII 壳
   'test-install-ui-entry.mjs',
   'test-mutation-ui.mjs',
+  // 失败归因：两类环境障碍（安全软件拦符号链接 / store 不同处）翻成人话 + 退出码人话化
+  'test-explain-failure.mjs',
   // 清单是单一真相，但真相会烂：这一格拿仓内 npm latest 快照核清单的区间还接不接受
   // 当前发布出来的版本（零网络；真网络版本 = 直接跑 `node test/range-drift.mjs`）。
   'range-drift.mjs',

@@ -5,6 +5,18 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/); versions
 
 ## [Unreleased]
 
+### Added
+
+- **失败输出加「人话环境归因」**（新件 `lib/explain-failure.mjs`，纯函数：不 spawn、不读盘、无网络）：
+  安装/卸载命令失败时，原始 stderr **原样保留**，后面**追加**一段人话 ——
+  ① `blocked-symlink`：安全软件（360 / EDR）拦了 pnpm 建符号链接（`EPERM … symlink` 同行，或栈里有
+  `registerProject`）⇒ 放行 / 换数据根 / 重试三选一；② `store-mismatch`：`ERR_PNPM_UNEXPECTED_STORE`
+  ⇒ 用回原来那处 store / 在该 profile 重装 / 换干净数据根；③ `unknown-pnpm`：认得出是 pnpm 的错但码没收录
+  ⇒ 给原码让用户带走。**认不出来返回 `null`，一个字都不加**（不猜）。归因只做展示，不参与判据、不改退出码。
+  终端三行缩进 4 格（不进进度事件），另发一条摘要行给 `--ui` / exe 的页面 lines + 失败项详情。
+- **退出码写人话**：Windows 上无符号退出码（如 `4294963248`）追加等价写法
+  `（= -4048，0xFFFFF030）`，原始数值永远在最前面（可解析性不丢）。常规退码（0/1/3/4…）一个字符不改。
+
 ### Fixed
 
 - **挂载判据把"子包路径挂载"判成没挂（memory-toolkit 装完必被判失败并回滚）**：`--dump-config` 里
