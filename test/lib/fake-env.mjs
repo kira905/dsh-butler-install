@@ -16,6 +16,13 @@ const args = process.argv.slice(2);
 const VERSION = process.env.FAKE_VERSION || '0.1.0';
 const BAD = /nope|missing|nonexistent/;
 
+// 夹具旋钮：让"装一项"变成一条能干很久的命令（【取消】要验"真能杀掉"，不能只验"下一项别开始"）
+function sleepSlow(ms) {
+  if (!ms || ms <= 0) return;
+  Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
+}
+const SLEEP_MS = Number(process.env.FAKE_SLEEP_MS || 0) || 0;
+
 function readJson(file, fallback) {
   try { return JSON.parse(fs.readFileSync(file, 'utf8')); } catch { return fallback; }
 }
@@ -47,6 +54,7 @@ if (args[0] === 'plugin') {
       console.error('ERR_PNPM_FETCH_404  GET https://registry.invalid/' + name + ' - 404 Not Found');
       process.exit(1);
     }
+    sleepSlow(SLEEP_MS);
     pkg.dependencies[name] = '^' + VERSION;
     const bundles = new Set(pkg.dsh.profile.bundles || []);
     bundles.add('@deepseek-ai/dsh-base');
@@ -118,6 +126,12 @@ const VERSION = process.env.FAKE_VERSION || '0.1.0';
 const prefix = process.env.npm_config_prefix || process.env.FAKE_NPM_PREFIX || '';
 const BAD = /nope|missing|nonexistent/;
 
+function sleepSlow(ms) {
+  if (!ms || ms <= 0) return;
+  Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
+}
+const SLEEP_MS = Number(process.env.FAKE_SLEEP_MS || 0) || 0;
+
 if (args[0] === 'config' && args[1] === 'get' && args[2] === 'prefix') {
   console.log(prefix);
   process.exit(0);
@@ -143,6 +157,7 @@ if (args[0] === 'i' && args[1] === '-g') {
     console.error('npm error 404 Not Found - GET https://registry.invalid/' + name);
     process.exit(1);
   }
+  sleepSlow(SLEEP_MS);
   writeJson(path.join(dirOf(name), 'package.json'), { name, version: VERSION });
   const short = shortName(name);
   if (process.platform === 'win32') {

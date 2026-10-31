@@ -6,12 +6,14 @@
   "license": "MIT",
   "bin": {
     "dsh-butler-install": "bin/dsh-butler-install.mjs",
+    "dsh-butler-install-ui": "bin/install-ui.mjs",
     "dsh-butler-install-probe-scan": "bin/probe-scan.mjs"
   },
   "files": [
     "bin/",
     "lib/",
     "suite-manifest.json",
+    "install-ui.cmd",
     "README.md"
   ],
   "engines": {

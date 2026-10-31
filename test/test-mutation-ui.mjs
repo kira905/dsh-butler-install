@@ -2,9 +2,13 @@
 //
 // 为什么非要有这一条：夹具最容易写成"永远绿" —— 判据写松了、断言的其实是自己刚写进去的值，
 // 或者被测函数根本没被走到。这里的做法是：把仓复制一份到临时目录，用字符串替换改坏一处，
-// 再在副本里跑同一个夹具；**改坏了还绿 ⇒ 这条夹具是假的**。
+// 再在副本里跑夹具；**改坏了还绿 ⇒ 这条夹具是假的**。
 //
-// 覆盖三处红线：监听地址 / 只读路由 / 命令同源（外加"原样副本必须绿"的对照）。
+// 覆盖三条红线：监听地址 / 令牌校验 / 写入口白名单（外加"原样副本必须绿"的对照）。
+// 2026-10-31 起，变异改在"页面能真装"之后的口径上：
+//  - 原来那条「路由表放开非 GET」不再是缺陷（POST 本来就该有入口了，见方案 §11.6 · I3），
+//    改成「POST 白名单放开到任意路径」；
+//  - 补一条「去掉令牌校验」——这是新加写入口之后最该守住的一条。
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -14,7 +18,10 @@ import { fileURLToPath } from 'node:url';
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(here, '..');
 
-const COPY_ENTRIES = ['package.json', 'suite-manifest.json', 'bin', 'lib', 'test'];
+const COPY_ENTRIES = ['package.json', 'suite-manifest.json', 'install-ui.cmd', 'bin', 'lib', 'test'];
+
+// 两条夹具都要跑：老的那条守"只读面没被改坏"，新的那条守"写入口的八道闸"
+const FIXTURES = ['test-ui.mjs', 'test-ui-install.mjs'];
 
 const MUTATIONS = [
   {
@@ -25,18 +32,18 @@ const MUTATIONS = [
     expect: '监听地址',
   },
   {
-    label: '路由表放开非 GET（只要多一个写入口，"只读"就没了）',
+    label: '去掉令牌校验（写入口等于对本地任意页面敞开）',
     file: 'lib/ui-server.mjs',
-    from: "  if (String(method || '').toUpperCase() !== 'GET') return { kind: 'method-not-allowed' };",
-    to: '  if (false) return { kind: \'method-not-allowed\' };',
-    expect: '405',
+    from: '  if (!sameToken(req, deps.token)) {',
+    to: '  if (false) {',
+    expect: '令牌',
   },
   {
-    label: '安装命令不再带期望区间（演练文本与 /state 会一起变）',
-    file: 'lib/plan.mjs',
-    from: 'const spec = `${item.name}@${item.versionRange}`;',
-    to: 'const spec = `${item.name}`;',
-    expect: '逐字节一致',
+    label: 'POST 白名单放开到任意路径（写方法的入口就不止那几条了）',
+    file: 'lib/ui-server.mjs',
+    from: '    if (postKind) return { kind: postKind };',
+    to: "    if (postKind || true) return { kind: postKind || 'start' };",
+    expect: '405',
   },
 ];
 
@@ -50,11 +57,18 @@ function copyRepo(dest) {
 }
 
 function runFixture(dir) {
-  return spawnSync(process.execPath, ['test/run-one.mjs', 'test-ui.mjs'], {
-    cwd: dir,
-    encoding: 'utf8',
-    timeout: 180000,
-  });
+  let status = 0;
+  let output = '';
+  for (const file of FIXTURES) {
+    const res = spawnSync(process.execPath, ['test/run-one.mjs', file], {
+      cwd: dir,
+      encoding: 'utf8',
+      timeout: 300000,
+    });
+    output += `\n### ${file}\n${res.stdout || ''}${res.stderr || ''}`;
+    if (res.status !== 0) status = res.status || 1;
+  }
+  return { status, stdout: output, stderr: '' };
 }
 
 function freshCopy(root, label) {
@@ -71,7 +85,8 @@ export async function run(c) {
     // 对照：原样副本必须绿 —— 否则下面那几条"变红"可能只是复制坏了
     const control = freshCopy(root, 'control');
     const okRun = runFixture(control);
-    c.eq(okRun.status, 0, `原样副本必须跑绿（rc=${okRun.status}）${okRun.status === 0 ? '' : `：${(okRun.stdout || okRun.stderr || '').split('\n').slice(0, 4).join(' | ')}`}`);
+    c.eq(okRun.status, 0, `原样副本必须跑绿（rc=${okRun.status}）${okRun.status === 0 ? '' : `：${(okRun.stdout || okRun.stderr || '').split('\n').slice(-6).join(' | ')}`}`);
+    fs.rmSync(control, { recursive: true, force: true });
 
     for (const [index, mutation] of MUTATIONS.entries()) {
       const dir = freshCopy(root, `mut-${index + 1}`);

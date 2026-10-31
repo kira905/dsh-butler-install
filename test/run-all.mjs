@@ -14,6 +14,10 @@ const modules = [
   'test-apply.mjs',
   'test-rollback.mjs',
   'test-ui.mjs',
+  // 可视化安装后端：八道闸 + 执行器 + 撤回两条路（方案 §11.6 修订后的实现规格）
+  'test-ui-install.mjs',
+  // 双击入口：探测式单实例（连起两次只得到一个服务）+ 纯 ASCII 壳
+  'test-install-ui-entry.mjs',
   'test-mutation-ui.mjs',
   // 清单是单一真相，但真相会烂：这一格拿仓内 npm latest 快照核清单的区间还接不接受
   // 当前发布出来的版本（零网络；真网络版本 = 直接跑 `node test/range-drift.mjs`）。
