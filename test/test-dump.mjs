@@ -54,6 +54,74 @@ export async function run(c) {
 `);
   c.eq(checkMounted(doubleMount, '@kira905/dsh-one').ok, false, '同一个包挂两次必须判失败');
 
+  // ── 子包路径挂载（2026-10-31 真装 dump 原文片段，memory-toolkit 0.2.0）──
+  // 修之前这里是 0 命中 ⇒ 用户照清单装这一项每轮白装一遍再被回滚
+  const SUBPATH_REAL = `# == @kira905/dsh-memory-toolkit
+- id: kira905-memory
+  name: '@kira905/dsh-memory-toolkit/dsh-memory-local'
+`;
+  const subpath = analyzeDump(SUBPATH_REAL);
+  const subpathResult = checkMounted(subpath, '@kira905/dsh-memory-toolkit');
+  c.eq(subpathResult.ok, true, '子包路径挂载（@scope/pkg/内部模块）必须判挂上');
+  c.eq(subpathResult.entryCount, 1, '子包路径：命中条目 1 条');
+  c.eq(subpathResult.names, ['@kira905/dsh-memory-toolkit/dsh-memory-local'], '命中条目要报出真实 name（不是拿包名硬套）');
+  c.eq(subpathResult.nameCounts, [1], '该 name 在整棵树里恰好 1 次');
+  c.eq(subpathResult.idCounts, [1], '该 id 在整棵树里恰好 1 次');
+  c.eq(subpathResult.problems, [], '子包路径挂载不该留下任何红字');
+
+  // 老形态不回归：name 精确等于包名
+  const legacyExact = analyzeDump(`# == @kira905/dsh-ecosystem-panel
+- id: kira905-panel
+  name: '@kira905/dsh-ecosystem-panel'
+`);
+  c.eq(checkMounted(legacyExact, '@kira905/dsh-ecosystem-panel').ok, true, '老形态（name 精确等于包名）不许回归');
+
+  // `/` 边界：前缀必须带 `/` 才算子路径
+  const boundaryLonger = analyzeDump(`# == @kira905/dsh-foo
+- id: foobar
+  name: '@kira905/dsh-foobar'
+`);
+  const boundaryLongerResult = checkMounted(boundaryLonger, '@kira905/dsh-foo');
+  c.eq(boundaryLongerResult.entryCount, 0, '`@kira905/dsh-foobar` 不许命中包 `@kira905/dsh-foo`（前缀必须带 /）');
+  c.eq(boundaryLongerResult.ok, false, '撞前缀但没挂上 ⇒ 必须判失败');
+  c.ok(boundaryLongerResult.problems.some((p) => p.includes('出现 0 次')), '失败说明要写出"出现 0 次"');
+
+  const boundaryShorter = analyzeDump(`# == @kira905/dsh-foo-bar
+- id: foo
+  name: '@kira905/dsh-foo'
+`);
+  c.eq(checkMounted(boundaryShorter, '@kira905/dsh-foo-bar').entryCount, 0, '反向：条目是短名 `@kira905/dsh-foo`，不许当成包 `@kira905/dsh-foo-bar` 的挂载');
+
+  // 同一内部模块挂两次（不同 id）⇒ 仍判红（重复挂载的防线不许拆）
+  const subpathDouble = analyzeDump(`# == @kira905/dsh-memory-toolkit
+- id: kira905-memory
+  name: '@kira905/dsh-memory-toolkit/dsh-memory-local'
+- id: kira905-memory-2
+  name: '@kira905/dsh-memory-toolkit/dsh-memory-local'
+`);
+  const subpathDoubleResult = checkMounted(subpathDouble, '@kira905/dsh-memory-toolkit');
+  c.eq(subpathDoubleResult.ok, false, '同一内部模块挂两次（id 不同）仍必须判红');
+  c.ok(
+    subpathDoubleResult.problems.some((p) => p.includes('在整棵树里出现 2 次')),
+    '失败说明要写出该 name 在整棵树里出现 2 次',
+  );
+  c.eq(
+    subpathDoubleResult.problems.filter((p) => p.includes('dsh-memory-local')).length,
+    1,
+    '同一条红只报一次，不刷屏',
+  );
+
+  // 一个包有意识地挂两个内部模块：合法形态，不许判死（判据取舍写在报告里）
+  const twoModules = analyzeDump(`# == @kira905/dsh-memory-toolkit
+- id: kira905-memory
+  name: '@kira905/dsh-memory-toolkit/dsh-memory-local'
+- id: kira905-memory-cli
+  name: '@kira905/dsh-memory-toolkit/cli'
+`);
+  const twoModulesResult = checkMounted(twoModules, '@kira905/dsh-memory-toolkit');
+  c.eq(twoModulesResult.entryCount, 2, '挂两个内部模块：命中条目 2 条');
+  c.eq(twoModulesResult.ok, true, '两条 name 各 1 次 ⇒ 合法形态，必须判通过');
+
   // 三条计数判据要各自独立可触发（否则就是"看起来三条、实际只有一条在干活"）
   // ① 只有"组合头 0 行"错：条目在、name 与 id 都恰好 1 次（包是被别的组合 patch 进去的）
   const bundleOnly = analyzeDump(`# == @deepseek-ai/dsh-base

@@ -3,6 +3,19 @@
 All notable changes to this project are documented here.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/); versions follow SemVer.
 
+## [Unreleased]
+
+### Fixed
+
+- **挂载判据把"子包路径挂载"判成没挂（memory-toolkit 装完必被判失败并回滚）**：`--dump-config` 里
+  `name: '@kira905/dsh-memory-toolkit/dsh-memory-local'` 是子包路径挂载（正常形态），旧判据只认
+  `name === 包名` ⇒ 命中 0 条 ⇒ 每轮装完自检红、就地回滚，用户照清单永远装不上。
+  现在命中条件 = **精确相等 或 `<包名>/` 前缀**（`/` 是硬边界：`@s/dsh-foo` 不会命中包 `@s/dsh-foobar`，反之亦然）。
+- **"同一实现挂两次"的防线改成逐 name 数次数**：原来靠"命中条目恰好 1 条"隐含兜着，现在单独判
+  「每个命中 name 在整棵树里恰好 1 次」并保留「每个 id 恰好 1 次」⇒ 一个包有意识地挂多个内部模块
+  （各 name 各 1 次）判通过，同一个 name 出现两次仍判红。
+- 挂载通过时的说明文案改为按实际读数报「条目 N 条（name 列表）」，不再写死"1 条"。
+
 ## [0.2.1] - 2026-10-31
 
 > 本版**已发布到 npm**（`latest = 0.2.1`）。它是 0.2.0 的清单修复重发：0.2.0 带的清单把 5 个组件钉在
