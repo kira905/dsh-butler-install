@@ -1,7 +1,7 @@
 {
   "name": "@kira905/dsh-butler-install",
   "version": "0.2.1",
-  "description": "Thin installer for the DSH butler suite: one command installs the plugin + CLI bundle through the host's own commands, then tells you whether it actually took effect, and can roll the whole batch back. Also ships a read-only local wizard page (--ui) that lives outside DSH: loopback only, GET only, never executes anything.",
+  "description": "Thin installer for the DSH butler suite: one command installs the plugin + CLI bundle through the host's own commands, then tells you whether it actually took effect, and can roll the whole batch back. Also ships a local wizard page (--ui) that lives outside DSH and can install from the browser: nothing runs until you press confirm; loopback only, per-process token + same-origin check, four POST entry points (preview/start/cancel/rollback), two honest rollbacks. It does not isolate you from other programs running as the same local user.",
   "type": "module",
   "license": "MIT",
   "bin": {

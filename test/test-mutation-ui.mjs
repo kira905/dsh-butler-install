@@ -4,11 +4,12 @@
 // 或者被测函数根本没被走到。这里的做法是：把仓复制一份到临时目录，用字符串替换改坏一处，
 // 再在副本里跑夹具；**改坏了还绿 ⇒ 这条夹具是假的**。
 //
-// 覆盖三条红线：监听地址 / 令牌校验 / 写入口白名单（外加"原样副本必须绿"的对照）。
+// 覆盖四条红线：监听地址 / 令牌校验 / 写入口白名单 / 同源校验（外加"原样副本必须绿"的对照）。
 // 2026-10-31 起，变异改在"页面能真装"之后的口径上：
 //  - 原来那条「路由表放开非 GET」不再是缺陷（POST 本来就该有入口了，见方案 §11.6 · I3），
 //    改成「POST 白名单放开到任意路径」；
-//  - 补一条「去掉令牌校验」——这是新加写入口之后最该守住的一条。
+//  - 补一条「去掉令牌校验」——这是新加写入口之后最该守住的一条；
+//  - 再补一条「去掉同源校验」——令牌 + 同源是这一版写进对外的两条安全承诺，少一条就只剩一半。
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -44,6 +45,13 @@ const MUTATIONS = [
     from: '    if (postKind) return { kind: postKind };',
     to: "    if (postKind || true) return { kind: postKind || 'start' };",
     expect: '405',
+  },
+  {
+    label: '去掉同源校验（任意本地页面都能借你的浏览器发 POST）',
+    file: 'lib/ui-server.mjs',
+    from: '  const origin = checkOrigin(req, deps.server);',
+    to: '  const origin = { ok: true };',
+    expect: '闸 3',
   },
 ];
 

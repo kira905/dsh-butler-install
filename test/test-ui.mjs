@@ -1,10 +1,11 @@
-// --ui 只读向导页：监听地址 / 路由表 / 与 --dry-run 同源 / 每请求零 spawn / 端口冲突 / 向后兼容
+// --ui 向导页：监听地址 / 路由表 / 与 --dry-run 同源 / 每请求零 spawn / 端口冲突 / 向后兼容
 //
 // 为什么这几条必须逐条钉住：
 //  - 监听地址：绑 0.0.0.0 = 把本机服务摊给同网段每一台机器，这是安全红线，不是配置项；
-//  - 路由表：只要多一个非 GET 的路由，"只读"这个承诺就没了；
+//  - 路由表：0.2.x 时这里断言的是"POST 一律 405"。0.3.0 起页面能装（方案 §11.6 · I3），
+//    所以改成"**POST 只有白名单那四条，其余仍 405**" —— 只放开这四条，别的一寸不让；
 //  - 同源：页面自己拼命令 ⇒ 用户复制到的不是安装器真会跑的那行（假一致比没有界面更坏）；
-//  - 零 spawn：处理请求的路径一旦会起进程，"只读"就变成"大概是只读"；
+//  - 零 spawn：处理请求的路径一旦会起进程，"读一遍现在装了什么"就不再可信；
 //  - 向后兼容：不给 --ui 时输出要一字不差（金标 = 加 --ui 之前的原始输出，逐字节冻结）。
 import fs from 'node:fs';
 import net from 'node:net';
@@ -21,6 +22,8 @@ import {
   resolvePort,
   UI_HOST,
   DEFAULT_UI_PORT,
+  GET_PATHS,
+  POST_PATHS,
 } from '../lib/ui-server.mjs';
 import { escapeHtml } from '../lib/ui-page.mjs';
 import { parseArgs } from '../lib/cli-args.mjs';
@@ -128,7 +131,7 @@ function closeServer(server) {
   return new Promise((resolve) => server.close(() => resolve()));
 }
 
-export const name = '只读向导页（--ui）';
+export const name = '向导页（--ui）';
 
 export async function run(c) {
   const env = fixtureEnv();
@@ -244,6 +247,21 @@ export async function run(c) {
     c.notContains(page.body, '才能成功', '🔴 同上：不许把建议顺序说成成功前提');
     c.contains(page.body, '组件之间没有代码依赖', '要给"为什么这么建议"的口径');
 
+    // 0.3.0 起页面能装：对外文案必须同时说清「点了才装」与「装完要重启」（判据 4 的机读版）
+    c.contains(page.body, '要重启 DSH，插件才会出现在侧边栏', '🔴 必须写明"装完要重启 DSH 才在侧边栏出现"（最容易被当成被骗）');
+    c.contains(page.body, '不点确认，一条命令都不会跑', '要说清"点了才装、不点不装"');
+    c.contains(page.body, '不装 DSH', '要说清本工具不装 DSH（前提摆在最上面）');
+    c.contains(page.body, 'data-action="preview"', '要有【开始安装】按钮');
+    c.contains(page.body, 'data-action="start"', '要有【确认，开始】按钮');
+    c.contains(page.body, 'data-action="cancel"', '要有【取消】按钮');
+    c.contains(page.body, 'data-action="rollback-uninstall"', '撤回动作 A【卸载这次装的】要在页面上');
+    c.contains(page.body, 'data-action="rollback-restore"', '撤回动作 B【只恢复配置文件到装前】要在页面上');
+    c.contains(page.body, '已取消，装了一半', '🔴 取消之后必须承认"装了一半"，不许假装干净');
+    c.contains(page.body, 'node_modules', '撤回 B 的文案要说清"实体还在"');
+    c.contains(page.body, '拒动', '撤回 B 的文案要说清"期间有别人改过就拒动"');
+    c.notContains(page.body, '（只读）', '🔴 页面标题不许还写着"只读"');
+    c.notContains(page.body, '不执行任何命令', '🔴 页面正文不许还写着"不执行任何命令"');
+
     // ── 4. GET /state 与 --dry-run 逐项对照 ───────────────────
     const stateRes = await request(started.port, 'GET', '/state');
     c.eq(stateRes.status, 200, 'GET /state 必须 200');
@@ -267,23 +285,47 @@ export async function run(c) {
         c.eq(d.command, null, `${item.name} 已满足 ⇒ /state 里 command 必须是 null`);
       }
     }
+    // 状态文案只该有一份实现（lib/item-status.mjs）：服务端算好随 state 下发，页面只读不算
+    for (const item of state.items) {
+      c.ok(item.status && typeof item.status.text === 'string' && typeof item.status.cls === 'string',
+        `🔴 /state 要带上算好的状态文案（${item.name}）—— 页面脚本不许自己再算一遍`);
+      c.eq(item.status.text, item.installed ? '已装' : '未装', `${item.name} 的状态文案要与"装着没有"一致`);
+      c.contains(page.body, `class="badge ${item.status.cls}">${item.status.text}<`, `${item.name} 的首屏徽标要跟 /state 下发的是同一份`);
+    }
     c.contains(dry.text, `演练结束：将执行 ${state.counts.install} 条命令，跳过 ${state.counts.skip} 项（已满足）。`, '/state 的计数要与演练尾巴一致');
     c.contains(page.body, `data-count="install">${state.counts.install}<`, '页面的"待装 N"要与 /state 一致');
 
-    // ── 5. 路由表：除两个 GET 之外全部 405 ────────────────────
+    // ── 5. 路由表：POST 只有白名单那四条，其余一律 405 ────────
+    // 两半都要断：
+    //   ① 白名单那四条**不再是 405**（没令牌先 403）—— 否则页面上的按钮永远点不动；
+    //   ② 白名单之外**仍然 405** —— 放开写入口只放开这四条，别的一寸不让。
+    for (const pathname of POST_PATHS) {
+      const res = await request(started.port, 'POST', pathname, '{}');
+      c.eq(res.status, 403, `🔴 POST ${pathname} 是白名单入口：没令牌要先 403（不是 405）`);
+      c.contains(res.body, 'bad-token', `POST ${pathname} 没令牌的正文要说是令牌问题`);
+    }
+    for (const pathname of GET_PATHS) {
+      const res = await request(started.port, 'POST', pathname, '{}');
+      c.eq(res.status, 405, `POST ${pathname} 是读路径 ⇒ 405（读路径不提供写方法）`);
+      c.eq(String(res.headers.allow || ''), 'GET', `POST ${pathname} 要带 Allow: GET`);
+      c.contains(res.body, 'method-not-allowed', `POST ${pathname} 的正文要说明原因`);
+    }
+    // method, path, body, 期望的 Allow（按路径给，不再一刀切）
     const writeAttempts = [
-      ['POST', '/', '{}'],
-      ['PUT', '/state', '{"x":1}'],
-      ['DELETE', '/', undefined],
-      ['PATCH', '/state', '{}'],
-      ['OPTIONS', '/', undefined],
-      ['HEAD', '/', undefined],
-      ['POST', '/nope', '{}'],
+      ['POST', '/', '{}', 'GET'],
+      ['PUT', '/state', '{"x":1}', 'GET'],
+      ['DELETE', '/', undefined, 'GET'],
+      ['PATCH', '/state', '{}', 'GET'],
+      ['OPTIONS', '/', undefined, 'GET'],
+      ['HEAD', '/', undefined, 'GET'],
+      ['POST', '/nope', '{}', 'GET'],
+      ['PUT', '/install/start', '{}', 'POST'],
+      ['DELETE', '/install/rollback', undefined, 'POST'],
     ];
-    for (const [method, target, body] of writeAttempts) {
+    for (const [method, target, body, allow] of writeAttempts) {
       const res = await request(started.port, method, target, body);
-      c.eq(res.status, 405, `🔴 ${method} ${target} 必须 405（只读页面没有写入口）`);
-      c.eq(String(res.headers.allow || ''), 'GET', `${method} ${target} 要带 Allow: GET`);
+      c.eq(res.status, 405, `🔴 ${method} ${target} 必须 405（写入口只有那四条）`);
+      c.eq(String(res.headers.allow || ''), allow, `${method} ${target} 的 Allow 要按路径给：${allow}`);
       if (method !== 'HEAD') c.contains(res.body, 'method-not-allowed', `${method} ${target} 的正文要说明原因`);
     }
     const notFound = await request(started.port, 'GET', '/nope');
