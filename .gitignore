@@ -13,3 +13,5 @@ generated/
 logs/
 coverage/
 *.tgz
+# exe 分发物（走网盘，不进仓；仓里只留"怎么造" = scripts/build-exe.mjs）
+dist/

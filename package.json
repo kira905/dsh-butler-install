@@ -26,6 +26,11 @@
     "rollback"
   ],
   "scripts": {
-    "test": "node test/run-all.mjs"
+    "test": "node test/run-all.mjs",
+    "build:exe": "node scripts/build-exe.mjs"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2",
+    "postject": "1.0.0-alpha.6"
   }
 }
