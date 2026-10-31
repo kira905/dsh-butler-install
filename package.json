@@ -1,6 +1,6 @@
 {
   "name": "@kira905/dsh-butler-install",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Thin installer for the DSH butler suite: one command installs the plugin + CLI bundle through the host's own commands, then tells you whether it actually took effect, and can roll the whole batch back. Also ships a read-only local wizard page (--ui) that lives outside DSH: loopback only, GET only, never executes anything.",
   "type": "module",
   "license": "MIT",

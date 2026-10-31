@@ -3,7 +3,11 @@
 All notable changes to this project are documented here.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/); versions follow SemVer.
 
-## [Unreleased]
+## [0.2.1] - 2026-10-31
+
+> 本版**已发布到 npm**（`latest = 0.2.1`）。它是 0.2.0 的清单修复重发：0.2.0 带的清单把 5 个组件钉在
+> 发布前的旧区间上，一条命令装出来的是旧一套，**而且装后自检照样绿**（自检读同一份清单、同样认为旧版本
+> 符合期望）—— 自己核自己，永远绿。本版换上新清单，并附一条能对 registry 现跑的区间判据。
 
 ### Fixed
 
