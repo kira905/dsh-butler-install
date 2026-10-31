@@ -5,7 +5,7 @@
   "items": [
     {
       "name": "@kira905/dsh-ecosystem-panel",
-      "versionRange": "^0.4.5",
+      "versionRange": "^0.5.0",
       "type": "plugin",
       "group": "核心",
       "mount": "auto",
@@ -15,7 +15,7 @@
     },
     {
       "name": "@kira905/dsh-butler-archive",
-      "versionRange": "^0.3.5",
+      "versionRange": "^0.4.0",
       "type": "plugin",
       "group": "界面",
       "mount": "auto",
@@ -45,13 +45,13 @@
     },
     {
       "name": "@kira905/dsh-memory-toolkit",
-      "versionRange": "^0.1.2",
+      "versionRange": "^0.2.0",
       "type": "plugin",
       "group": "记忆",
       "mount": "auto",
       "aliases": ["记忆"],
       "probe": { "kind": "existence" },
-      "note": "记忆工具：自带一份记忆实现（子包 dsh-memory-local）+ 三个命令行。它与官方记忆插件抢同一个位置，二选一；装之前先看 profile 的组合列表里有没有官方那份。区间下界按注册表上真正装得到的版本写：现可得的那一版把 bundle 声明放在子包里，装完会装成普通依赖、挂载判据如实报 ⏭（不算通过）；带正确声明的版本发布后，这个区间会自动接受它，本项同时转为「必须挂载」。"
+      "note": "记忆工具：自带一份记忆实现（子包 dsh-memory-local）+ 三个命令行（dsh-memory-audit / export / summary）。它与官方记忆插件抢同一个位置，二选一；装之前先看 profile 的组合列表里有没有官方那份。下界钉在 0.2.0 有据：0.2.0 起主包自己带 dsh.bundle（patch 指向 ./cordis.patch.yml），装进 profile 就会被挂载，本项按「必须挂载」判；0.1.x 那版把声明放在子包里，装完是普通依赖、挂载判据只能报 ⏭（不算通过）。⚠️ 0.x 的插入号只吃补丁号，0.1.x → 0.2.0 这种跨小版本（0 阶段的真·大版本）旧区间不会自动接受 —— 想让它变绿只能改区间，它不会自愈。"
     },
     {
       "name": "@kira905/dsh-board-toolkit",
@@ -64,7 +64,7 @@
     },
     {
       "name": "@kira905/dsh-butler-core",
-      "versionRange": "^0.1.1",
+      "versionRange": "^0.3.0",
       "type": "cli",
       "group": "CLI",
       "aliases": ["核心", "大管家核心"],
@@ -127,7 +127,7 @@
     },
     {
       "name": "@kira905/dsh-quality-toolkit",
-      "versionRange": "^0.1.1",
+      "versionRange": "^0.2.0",
       "type": "cli",
       "group": "体检",
       "aliases": ["质量"],

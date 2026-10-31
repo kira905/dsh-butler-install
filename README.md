@@ -227,6 +227,22 @@ npm test
 以及**变异测试**：把监听地址改成 `0.0.0.0`、或把路由表放开非 `GET`、或让命令字符串不带期望区间，
 夹具必须**变红**（改坏了还绿 ⇒ 这条夹具是假的）。
 
+### 清单漂移判据（`test/range-drift.mjs`）
+
+清单是单一真相，但真相会烂：写清单那天按当天的 latest 填区间，之后某个包跨了 0.x 的小版本
+（0 阶段里这就是大版本），caret 的上界就把新版挡在门外 —— 照清单装一遍拿到旧一套，而且装后自检
+**照样绿**（它读同一份清单）。所以这条判据对着清单外面的世界核，而不是自己核自己：
+
+```powershell
+node test/range-drift.mjs                                    # npm view，真网络
+node test/range-drift.mjs --offline test/fixtures/npm-latest-snapshot.json   # 读快照，零网络
+node test/range-drift.mjs --json --manifest <别的清单>
+```
+
+退出码：`0` 全部接受 · `3` 有漂移（照清单装会拿到旧版）· `4` 取数失败/无法判定（**绝不当通过**）·
+`2` 用法错或清单读不进来。`test/run-all.mjs` 里那一格走仓内快照、零网络；快照的 `capturedAt`
+是这份数据"什么时候是真的"的凭据，刷新清单区间时记得一起刷。
+
 ## 许可
 
 MIT

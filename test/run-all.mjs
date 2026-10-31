@@ -15,6 +15,9 @@ const modules = [
   'test-rollback.mjs',
   'test-ui.mjs',
   'test-mutation-ui.mjs',
+  // 清单是单一真相，但真相会烂：这一格拿仓内 npm latest 快照核清单的区间还接不接受
+  // 当前发布出来的版本（零网络；真网络版本 = 直接跑 `node test/range-drift.mjs`）。
+  'range-drift.mjs',
 ];
 
 let pass = 0;

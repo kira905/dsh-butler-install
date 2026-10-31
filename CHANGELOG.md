@@ -5,9 +5,30 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/); versions
 
 ## [Unreleased]
 
+### Fixed
+
+- **清单 5 项版本区间漂移**：`dsh-ecosystem-panel` / `dsh-butler-archive` / `dsh-memory-toolkit` /
+  `dsh-butler-core` / `dsh-quality-toolkit` 的 `versionRange` 停在写清单那天，之后这 5 个包各跳了
+  一个小版本（0.x 阶段里这就是大版本），caret 的上界把新版挡在门外 ⇒ 照旧清单装一遍拿到的是
+  发布前的旧一套，而且**装后自检照样绿**（它读同一份清单、同样认为旧版本符合期望）。区间已刷到
+  各包当前 latest：`^0.5.0` / `^0.4.0` / `^0.2.0` / `^0.3.0` / `^0.2.0`。
+- **`dsh-memory-toolkit` 的 note 据实改写**：0.2.0 起主包自己带 `dsh.bundle`，本项按「必须挂载」判；
+  旧 note 说"带正确声明的版本发布后，这个区间会自动接受它"是错的 —— `0.1.x → 0.2.0` 跨小版本，
+  caret 不会自动接受，想变绿只能改区间。
+
+### Added
+
+- **`test/range-drift.mjs`：清单区间 vs npm latest 的漂移判据**。一条命令对清单逐项判「区间还接不接受
+  registry 上的 latest」，逐项打印 + 汇总；退出码 `0` 全绿 / `3` 有漂移 / `4` 取数失败（**不当通过**）/
+  `2` 用法错。取数两条路：缺省 `npm view <pkg> version`（真网络），或 `--offline <json>` 读快照
+  （零网络，夹具用）。已接进 `test/run-all.mjs`（那一格零网络）。附取数快照
+  `test/fixtures/npm-latest-snapshot.json`（带 `capturedAt`，刷新时必改）。
+
 ## [0.2.0] - 2026-10-30
 
 > 本版只落仓，**未发 npm / 未打 tag**（发布统一在下一批做）。
+>
+> 补注（2026-10-31）：0.2.0 已在后续批次发布到 npm（`latest = 0.2.0`）；上面这行是当日落仓时的事实。
 
 ### Added
 
