@@ -5,8 +5,26 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/); versions
 
 ## [Unreleased]
 
+（暂无）
+
+## [0.3.0] - 2026-10-31
+
+> 本版**已发布到 npm**（`latest = 0.3.0`），Gitee / GitHub 双端打 tag `v0.3.0`。
+> 它是 V3O「可视化安装」那一批的落点：向导页从"能看"变成**能点着装**，再配一个连 node 都不用装的自足 exe。
+
 ### Added
 
+- **向导页能点着装**（`--ui`）：预览（只算不做）→ 【确认，开始】→ 逐项进度 → 取消 → 两条**诚实的撤回**
+  （「要重启 DSH 才生效」/「只恢复配置文件到装前」）。POST 入口一个没改，只新增字段
+  （`state.items[].status` / `progress.items[].label`）—— 纯加字段，不改签名。
+  对外文案**改说真话**：原来写"只读 / 永不执行"，现在明说页面能装、**不点确认一个字都不动**、
+  插件装完要重启 DSH 才会在侧边栏出现；安全边界也直说"它挡不住以同一本地用户身份跑的其他程序"。
+- **自足 Windows exe 分发物**（`npm run build:exe` → `dist/dsh-butler-install-<ver>-win-x64.exe`，约 89 MB）：
+  `scripts/build-exe.mjs` 把 `scripts/sea-entry.mjs` 用 esbuild 打成单文件 CJS → Node SEA 出 blob →
+  postject 注入本机 `node.exe` 的副本。**自带运行时**（连 node 不在 PATH 也能出界面）：环境体检
+  （dsh / npm 在不在）→ 探测已有向导页 → 起页面 → 自动开浏览器 → 关掉窗口就停；清单内嵌，
+  不依赖仓里那份 `suite-manifest.json`。`dist/` 进 `.gitignore`（走网盘分发，不撑仓；**构建链入仓**）。
+  `probeExistingUi` / `openBrowser` 挪到 `lib/ui-probe.mjs`，bin 只再导出，**行为不变**。
 - **失败输出加「人话环境归因」**（新件 `lib/explain-failure.mjs`，纯函数：不 spawn、不读盘、无网络）：
   安装/卸载命令失败时，原始 stderr **原样保留**，后面**追加**一段人话 ——
   ① `blocked-symlink`：安全软件（360 / EDR）拦了 pnpm 建符号链接（`EPERM … symlink` 同行，或栈里有
