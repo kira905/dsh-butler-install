@@ -1,5 +1,32 @@
 # dsh-butler-install
 
+> ### 这是什么
+> **上面那一整套的一键安装器**：一条命令装 16 个包，装完逐项自检，装坏了整批回滚。
+>
+> ### 它解决什么
+> 一套东西散成十几个包，最容易死在「装一半」：有的装上了、有的没有，报错还只说 `ERR_PNPM_`。这个安装器给三件东西 —— ① **清单驱动**（16 项一次装齐，缺一项就算失败）② **整批回滚**（不是只撤最后一个）③ **失败说人话**（把 pnpm 的环境障碍翻成「安全软件拦了建链接」「store 不在同一块盘」）。
+>
+> ### 一条命令跑起来
+> ```powershell
+> npm i -g @kira905/dsh-butler-install
+> dsh-butler-install --profile web --dry-run    # 先看要装什么
+> dsh-butler-install --profile web              # 真装
+> ```
+> 想点着鼠标装也行：`dsh-butler-install --ui` 会起一个本地向导页（只绑 `127.0.0.1`、只读、不执行）。
+>
+> ### 先看它长什么样（真实输出）
+> ```text
+> dsh-butler-install —— 大管家全家桶薄壳安装器
+> 用法：
+>   dsh-butler-install --profile <profile> [选项]
+>   --profile <name>        要操作的 profile（必填）。宿主会用它定位 <数据根>/profiles/<name>
+>   --manifest <path>       清单文件，默认用包内自带的 suite-manifest.json
+> ```
+>
+> 另有一个自足的 Windows exe（双击出界面，自带 node 运行时，不用先装环境）。
+
+---
+
 大管家全家桶的**薄壳安装器**：一条命令按清单装齐插件与命令行工具，装完**立刻告诉你成了没**，红了能整批回滚。
 
 > 卖点不是"一键"，是"一键之后的可验证性"。
