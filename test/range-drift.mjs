@@ -375,8 +375,13 @@ export async function run(c) {
       manifestPath: path.join(here, '..', 'suite-manifest.json'),
       offlinePath: path.join(here, 'fixtures', 'npm-latest-snapshot.json'),
     });
-    c.eq(real.rows.length, 16, '真实清单是 16 项');
-    c.eq(real.summary.ok, 16, '16 项全部接受仓内快照的 latest');
+    // 项数不钉死魔数（清单会增删包，钉死的数字会让"加一条清单"变成"改两处判据"）：
+    // 期望值取快照里的包数，⑧ 再单独保证快照集合与清单集合完全一致。
+    const countSnap = readSnapshot(path.join(here, 'fixtures', 'npm-latest-snapshot.json'));
+    const expectedCount = Object.keys(countSnap.versions).length;
+    c.ok(expectedCount > 0, '仓内快照能读到包（否则下面的项数判据等于没判）');
+    c.eq(real.rows.length, expectedCount, `真实清单项数与快照包数一致（${expectedCount} 项）`);
+    c.eq(real.summary.ok, expectedCount, `${expectedCount} 项全部接受仓内快照的 latest`);
     c.eq(real.exitCode, 0, '真实清单对仓内快照全绿');
     if (real.exitCode !== 0) {
       for (const row of real.rows.filter((r) => r.verdict !== 'yes')) {

@@ -172,8 +172,10 @@ export async function run(c) {
   // 12) 真的清单本身必须过校验（防止手改坏）
   const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
   const real = loadManifest(path.join(repoRoot, 'suite-manifest.json'));
-  c.eq(real.items.length, 16, '随包清单应有 16 项（5 插件 + 11 命令行）');
-  c.eq(real.items.filter((i) => i.type === 'plugin').length, 5, '随包清单里插件应为 5 项');
+  // 形状守卫：这里刻意钉死条数，改清单的人必须同时来改这里（一个显式的审核点），
+  // 不是为了让判据好过 —— 0.3.1 加了 @kira905/dsh-task-board-local（界面/plugin），16→17、5→6。
+  c.eq(real.items.length, 17, '随包清单应有 17 项（6 插件 + 11 命令行）');
+  c.eq(real.items.filter((i) => i.type === 'plugin').length, 6, '随包清单里插件应为 6 项');
   c.eq(real.items.filter((i) => i.type === 'cli').length, 11, '随包清单里命令行应为 11 项');
   c.ok(real.excluded.length >= 1, '不可安装的聚合仓必须在 excluded 里写明理由');
   c.ok(real.items.every((i) => i.probe && i.probe.kind === 'existence'), '默认探针必须全部是存在性检查（零执行）');
@@ -183,6 +185,10 @@ export async function run(c) {
   c.eq(sel.items.map((i) => i.name), ['@kira905/dsh-ecosystem-panel', '@kira905/dsh-board-toolkit'], '别名要能选中对应条目');
   const selGroup = selectItems(real, { only: ['记忆'] });
   c.eq(selGroup.items.map((i) => i.name), ['@kira905/dsh-memory-toolkit'], '组名与别名同名时按"都匹配"处理');
+  // 界面看板这条的别名刻意是「任务看板」而不是「看板」：后者已被 dsh-board-toolkit（30 个命令那件）占了，
+  // 清单校验器不许别名重复（会造成 --only 歧义）。这里钉住它确实按别名可选中。
+  const selBoardUi = selectItems(real, { only: ['任务看板'] });
+  c.eq(selBoardUi.items.map((i) => i.name), ['@kira905/dsh-task-board-local'], '界面看板要能按别名「任务看板」选中');
   const selSkip = selectItems(real, { only: ['CLI'], skip: ['看板'] });
   c.ok(!selSkip.items.some((i) => i.name === '@kira905/dsh-board-toolkit'), '--skip 要在 --only 之后再生效');
   const selBad = selectItems(real, { only: ['不存在的名字'] });

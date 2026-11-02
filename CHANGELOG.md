@@ -7,6 +7,30 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/); versions
 
 （暂无）
 
+## [0.3.1] - 2026-11-02
+
+> 本版**已发布到 npm**（`latest = 0.3.1`），Gitee / GitHub 双端打 tag `v0.3.1`。
+> 一句话：清单补上「任务看板」界面 —— 原来照清单装完，用户拿到的是 30 个看板命令，
+> 侧边栏里却**没有**看板界面。
+
+### Added
+
+- **清单加 `@kira905/dsh-task-board-local`（`^1.1.5`，组「界面」，`mount: auto`）**：
+  上游任务看板插件的 fork（宿主半 + 浏览器半都在包内），装完侧边栏出现「任务看板」。
+  两条必须写进 note 的坑：① 它与官方任务看板插件**抢同一个位置、二选一**（装之前先看 profile 的组合列表里有没有官方那份）；
+  ② **界面在它、那 30 个看板命令在 `@kira905/dsh-board-toolkit`** —— 两件分开装，别以为装了界面就有命令。
+  别名给的是「任务看板 / 看板界面」而不是「看板」：后者已被 board-toolkit 占着，
+  清单校验器不许别名重复（会造成 `--only` 歧义）。
+
+### Changed
+
+- **`test/fixtures/npm-latest-snapshot.json` 按真网络刷到 17 项**（`capturedAt` 跟着改）：
+  清单加了包而快照不跟，range-drift 的「快照集合 == 清单集合」判据会静默漏判。
+- **`test/range-drift.mjs` 的项数判据去掉写死的 16**，改成「与快照包数一致」——加一条包不该要人改两处判据。
+  `test/test-manifest.mjs` 的**形状守卫**仍显式钉「17 项 / 6 插件 / 11 命令行」：那是刻意的审核点，
+  改清单的人必须同时来改它。
+- **新增一条别名可用性断言**：`--only 任务看板` 必须选中 `@kira905/dsh-task-board-local`。
+
 ## [0.3.0] - 2026-10-31
 
 > 本版**已发布到 npm**（`latest = 0.3.0`），Gitee / GitHub 双端打 tag `v0.3.0`。
