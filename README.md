@@ -129,7 +129,7 @@ npx @kira905/dsh-butler-install --ui --port 45090
 
 上面那套都要敲命令。**连 PowerShell 都不想开**的话，下载一个 exe 就行：
 
-> **下载地址**：https://pan.baidu.com/s/1CxK4g-DAwuGoFVKLp4GqCA?pwd=9jir（提取码 `9jir`；文件名 `dsh-butler-install-0.3.0-win-x64.exe`，约 89 MB · 93,148,160 B）
+> **下载地址**：https://pan.baidu.com/s/1RezIxD4LitmEJ9U1FtFqFQ?pwd=pamq（提取码 `pamq`；文件名 `dsh-butler-install-0.3.1-win-x64.exe`，约 89 MB · 93,149,184 B）
 
 用法就三步：
 
