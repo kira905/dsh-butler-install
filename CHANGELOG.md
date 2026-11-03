@@ -7,6 +7,28 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/); versions
 
 （暂无）
 
+## [0.3.2] - 2026-11-03
+
+> 本版**只重建 exe 分发物，未发 npm**（npm `latest` 仍是 0.3.1；`package.json` 抬到 0.3.2 是为了让 exe 文件名与产物内嵌版本号对得上）。
+> 一句话：**内嵌清单把 `@kira905/dsh-session-title-live` 钉到 `^0.2.7`，避开 0.2.4–0.2.6 那个「每个会话开起来就 failed」的崩溃。**
+
+### Changed
+
+- **清单 `@kira905/dsh-session-title-live` 的 `versionRange`：`^0.2.5` → `^0.2.7`。**
+  0.2.4–0.2.6 把消息的 `source` 写成 v4 已退役的 `{ kind: 'plugin', plugin: … }`，而 DSH 0.2.1+ 的会话日志 v4 准入**硬拒** `source.kind === 'plugin'`；
+  它写的 `session/title-llm-request` 事件的 `messages` 恰在那份校验的扫描列表里 ⇒ **每一个会话**开起来 1–5 秒就 failed，
+  坏行还让界面「查看会话」报 `format v4 message requires a producer-owned source kind`。0.2.7 是修复版。
+  为什么非改区间：`^0.2.5` 理论上也会解析到 0.2.7，但只要用户机器上有缓存 / lockfile / 代理快照，
+  就可能落到坏版本 ⇒ **必须从区间上硬排除**。该条 note 已把这段理由写进去（改区间的人会先看到）。
+- **`test/fixtures/npm-latest-snapshot.json` 跟着刷到真 npm latest**（`capturedAt` 改 2026-11-03T14:36:02+08:00）：
+  `dsh-session-title-live` 0.2.6 → **0.2.7**，其余 16 项现取与快照逐项一致、未改。
+  不刷的话 range-drift 会立刻红（`^0.2.7` 不接受 latest 0.2.6），而且那条红是**对的** —— 它抓到的是"快照过期"。
+
+### 未改（顺带核过，只登记）
+
+其余 16 项区间现取核对：5 项下界恰好等于 latest；11 项区间内还接纳一个更旧的版本（旧版本本身**无已知缺陷记录**），
+属"理论上可被缓存落到旧版"的通用暴露面，本版不动它们 —— 只有 `dsh-session-title-live` 是**区间里真有已知坏版本**的那一项。
+
 ## [0.3.1] - 2026-11-02
 
 > 本版**已发布到 npm**（`latest = 0.3.1`），Gitee / GitHub 双端打 tag `v0.3.1`。
