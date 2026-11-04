@@ -7,6 +7,33 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/); versions
 
 （暂无）
 
+## [0.3.3] - 2026-11-05
+
+> 一句话：**照这份清单装，才会真的拿到新版** —— 把 `@kira905/dsh-memory-toolkit` 的区间从 `^0.2.0` 抬到 `^0.3.0`（旧区间上界停在 0.3.0 之前，新版发出去也装不上），并把三个"能装但不该默认装"的后建仓登记进 `excluded`。
+
+### Changed
+
+- **清单 `@kira905/dsh-memory-toolkit` 的 `versionRange`：`^0.2.0` → `^0.3.0`。**
+  `^0.2.0` 的语义是 `>=0.2.0 <0.3.0`，而 0.3.0 已在 npm 上 ⇒ 照旧清单装会拿到 **0.2.1**（少了「来源血缘 `source_ids`」与「记忆时效 `until`」两件能力），
+  而装后自检读的是**同一份清单**，照样报绿 ⇒ 这是**假绿**。`node test/range-drift.mjs` 联网判据原本就在报这条。
+- **`excluded[]` 追加三项**：`dsh-life-toolkit` / `dsh-peer-toolkit` / `dsh-router-toolkit`。
+  三者**都装得上**，但都是**另有用途的可选件**（生活侧 / 多机对偶 / Router），默认装进来只是多一份用不上的东西 ⇒ 不进 `items`（不拉长默认安装面），
+  各自在 `reason` 里写一句单独装命令。`items` 仍是 **17 项**，默认安装行为零变化。
+- **`README.md` 的 `excluded[]` 说明跟着改口径**：原文只写「不可安装项」，与新增的三项打架 ⇒ 改为「**不随这套默认安装的项**」，两类都写清（①不是包的目录 ②能装但另有用途的可选件）。
+- **`test/fixtures/npm-latest-snapshot.json` 刷到真 npm latest**（`capturedAt` → `2026-11-05T01:31:27+08:00`）：
+  `dsh-memory-toolkit` 0.2.0 → **0.3.0**、`dsh-ops-toolkit` 0.1.1 → **0.1.2**，其余 15 项现取一致、未改。
+  不刷的话离线判据会红（`^0.3.0` 在快照看来"超前于 registry"），而且那条红抓的正是"快照过期"。
+
+### Added
+
+- `publishConfig: { "access": "public" }` —— 前几版一直缺（同批另两个包都有），包本身早就 public、功能无碍；这次动它顺手补上。
+
+### 未改（顺带核过，只登记）
+
+- `items` 17 条一条没动，`versionRange` 除上面那条外全部照旧。
+- 本版**不重建 exe**：`dist/` 在 `.gitignore` 里、不随 npm 发；exe 是网盘分发物，重建与上传另算。
+- 订正上一版记录：`[0.3.2]` 那条写「未发 npm（npm latest 仍是 0.3.1）」，那是**当时**的事实；后来 0.3.2 已补发到 npm（`latest=0.3.2`、`time.0.3.2 = 2026-11-04T17:10:44Z`）。本条不改历史条目，只在此注明。
+
 ## [0.3.2] - 2026-11-03
 
 > 本版**只重建 exe 分发物，未发 npm**（npm `latest` 仍是 0.3.1；`package.json` 抬到 0.3.2 是为了让 exe 文件名与产物内嵌版本号对得上）。
