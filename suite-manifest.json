@@ -55,7 +55,7 @@
     },
     {
       "name": "@kira905/dsh-memory-toolkit",
-      "versionRange": "^0.2.0",
+      "versionRange": "^0.3.0",
       "type": "plugin",
       "group": "记忆",
       "mount": "auto",
@@ -168,6 +168,18 @@
       "id": "dsh-diagnostic-tools",
       "reason": "历史聚合仓，仓根没有 package.json，不是可安装的包；它里面两份子目录包的包名在 npm 上都取不到，且其中一个与已发布的作用域包同名不同域。别 git clone 它当安装源（会得到第二份来源）。要的这两件本清单已经单列了，装上即可。",
       "installInstead": ["@kira905/dsh-closure-tools", "@kira905/dsh-diagnostics-extra"]
+    },
+    {
+      "id": "dsh-life-toolkit",
+      "reason": "后建的服务端包，可安装，但**不随大管家套装默认安装** —— 它面向\"生活侧\"（人生记忆的落库与检索），跟工作侧的大管家不是同一套用法，默认装进来只会给每台机器多加一份用不上的东西。要单装：`npm i -g @kira905/dsh-life-toolkit@0.1.0`"
+    },
+    {
+      "id": "dsh-peer-toolkit",
+      "reason": "后建的跨机对偶工具包，可安装，但**不随大管家套装默认安装** —— 它只在多机对偶场景（两台机器互认、跨机递话）下才有意义，单机用户装了是空转。要单装：`npm i -g @kira905/dsh-peer-toolkit@0.1.1`"
+    },
+    {
+      "id": "dsh-router-toolkit",
+      "reason": "后建的 Router 工具包，可安装，但**不随大管家套装默认安装** —— 它是\"会派活的那只手\"，要么你已经在用 Router，要么就不该装（装了也不会自己跑）。要单装：`npm i -g @kira905/dsh-router-toolkit@0.2.0`"
     }
   ]
 }
