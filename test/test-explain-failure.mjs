@@ -1,8 +1,9 @@
 // 失败归因（人话环境归因）：两类"环境障碍"翻成人话 + 退出码写人话；
 // 并验真跑通路（runSuite）里「原始报错在前、归因在后、退出码语义不变」。
 //
-// 这里的三段真实 stderr 是 2026-10-31 第 24 棒真装验收里撞到的**原文**（一字未改）：
-// 拿真文本当夹具，比手写一段"像那么回事"的更有价值 —— 换了 pnpm 版本就靠它报警。
+// 这里的三段真实 stderr 取自 2026-10-31 第 24 棒真装验收里撞到的原文：只把「真实 Windows 用户名」
+// 与「私有测试树目录」换成 <user> 与 <TEST_TREE> 占位符，其余一字未改 ——
+// 拿真文本当夹具，比手写一段"像那么回事"的更有价值：换了 pnpm 版本就靠它报警。
 import fs from 'node:fs';
 import path from 'node:path';
 import { explainPnpmFailure, formatExitCode } from '../lib/explain-failure.mjs';
@@ -12,16 +13,16 @@ import { makeFakeEnv, pluginItem } from './lib/fake-env.mjs';
 export const name = '失败归因（人话环境归因）';
 
 /** ① 安全软件拦 pnpm 建符号链接（含 registerProject 栈） */
-const BLOCKED_SYMLINK = String.raw`[EPERM] EPERM: operation not permitted, symlink 'C:\Users\51367\AppData\Local\Temp\p24-full-home\profiles\web' -> 'C:\Users\51367\AppData\Local\pnpm\store\v11\projects\a4f7f3ed28c225f67a3375d618e5108a'
+const BLOCKED_SYMLINK = String.raw`[EPERM] EPERM: operation not permitted, symlink 'C:\Users\<user>\AppData\Local\Temp\p24-full-home\profiles\web' -> 'C:\Users\<user>\AppData\Local\pnpm\store\v11\projects\a4f7f3ed28c225f67a3375d618e5108a'
 pnpm: EPERM: operation not permitted, symlink '...' -> '...'
     at async Object.symlink (node:internal/fs/promises:1059:10)
-    at async createSymlinkAsync (file:///C:/Users/51367/AppData/Roaming/npm/node_modules/pnpm/dist/pnpm.mjs:51013:13)
+    at async createSymlinkAsync (file:///C:/Users/<user>/AppData/Roaming/npm/node_modules/pnpm/dist/pnpm.mjs:51013:13)
     at async forceSymlink (...)
-    at async registerProject (file:///C:/Users/51367/AppData/Roaming/npm/node_modules/pnpm/dist/pnpm.mjs:184446:3)`;
+    at async registerProject (file:///C:/Users/<user>/AppData/Roaming/npm/node_modules/pnpm/dist/pnpm.mjs:184446:3)`;
 
 /** ② pnpm store 与已有 node_modules 不在同一处 */
 const STORE_MISMATCH = String.raw`[ERR_PNPM_UNEXPECTED_STORE] Unexpected store location
-The dependencies at "D:\DSH-offsync\DSH-test\.dsh\profiles\web\node_modules" are currently linked from the store at "C:\Users\51367\AppData\Local\pnpm\store\v11".
+The dependencies at "D:\<TEST_TREE>\DSH-test\.dsh\profiles\web\node_modules" are currently linked from the store at "C:\Users\<user>\AppData\Local\pnpm\store\v11".
 pnpm now wants to use the store at "D:\.pnpm-store\v11" to link dependencies.
 If you want to use the new store location, reinstall your dependencies with "pnpm install".`;
 
