@@ -186,13 +186,17 @@ function firstLine(text, max = 80) {
   return line0.length > max ? `${line0.slice(0, max)}…` : line0;
 }
 
-/** 体检：dsh 与 npm 都得能跑。返回 {ok, missing:'dsh'|'npm'|null, detail} */
+/**
+ * 体检：dsh 与 npm 都得能跑。返回 {ok, missing:'dsh'|'npm'|null, detail, where}
+ * · `detail` = 系统原话（stderr 首行），`where` = `where dsh` 给的路径。
+ * · 失败时也把 `where` 带回去：它正是「没装」与「装了但跑不起来」的分档判据（见 printMissingDsh）。
+ */
 function checkPrerequisites(log) {
   log('[1/3] 看看这台电脑上装没装 DSH …');
   const dshWhere = locate('dsh');
   const dshVersion = versionOf('dsh');
   if (!dshVersion.ok) {
-    return { ok: false, missing: 'dsh', detail: firstLine(dshVersion.reason) };
+    return { ok: false, missing: 'dsh', detail: firstLine(dshVersion.reason), where: dshWhere };
   }
   log(`      ✔ DSH ${firstLine(dshVersion.out) || '(版本号没打印，但能跑)'}${dshWhere ? `  ← ${dshWhere}` : ''}`);
 
@@ -206,7 +210,22 @@ function checkPrerequisites(log) {
   return { ok: true, missing: null, detail: '' };
 }
 
-function printMissingDsh() {
+/**
+ * 「你装的可能是桌面版」—— A / B 两档共用的尾句（抽出来，免得改一处忘另一处）。
+ *
+ * 为什么必须有这一句（2026-11-05 用户反馈）：桌面版/图形版 DSH **可能不带 `dsh` 命令**，
+ * 用户装的是 DSH，看到的却是「没装 DSH」，会以为装错了东西。给他一条「再装命令行版」的路，
+ * 而不是让他去猜。注意 exe 自己不装 DSH，这里只是把该敲的命令说清楚。
+ */
+function printDesktopVersionHint() {
+  line('  ⚠ 如果你装的是「桌面版 / 图形版」DSH，它可能没带命令行 ——');
+  line('    那种情况下请再装一个命令行版：npm i -g @deepseek-ai/dsh');
+  line('    装完 dsh --version 能打出版本号，再双击本 exe。');
+  line('');
+}
+
+/** A 档：`where dsh` 也找不到 —— 就是没装（或装了但没进 PATH） */
+function printDshAbsent() {
   line('');
   line('  ============================================================');
   line('   ✖ 这台电脑上还没装 DSH');
@@ -223,6 +242,52 @@ function printMissingDsh() {
   line('');
   line('  想确认装好了：敲  dsh --version  能打出版本号就对了。');
   line('');
+  printDesktopVersionHint();
+}
+
+/**
+ * B 档：`where dsh` 找到了、但 `dsh --version` 跑不起来。
+ * 这种情况用户明明装了 DSH，却看到「还没装」—— 帮不到他定位，所以单列一档。
+ * @param {{where:string, detail:string}} info
+ */
+function printDshBroken({ where = '', detail = '' } = {}) {
+  line('');
+  line('  ============================================================');
+  line('   ✖ 找到了 dsh，但它跑不起来');
+  line('  ============================================================');
+  line('');
+  line('  这次不是「没装」：命令在，只是执行没成功（也可能是装坏了）。');
+  line('');
+  line('  找到的位置：');
+  line(`        ${where}`);
+  if (detail) {
+    line('  系统原话：');
+    line(`        ${detail}`);
+  }
+  line('');
+  line('  三条常见原因，按顺序试：');
+  line('    1) 刚装完 DSH，但这个窗口的 PATH 还是旧的');
+  line('       → 关掉窗口，重新双击本 exe');
+  line('    2) 权限不够 / 被安全软件拦了');
+  line('       → 换个有管理员权限的窗口试，或给上面那个路径放行');
+  line('    3) 装坏了（升级到一半、文件丢了）');
+  line('       → 重装一次：npm i -g @deepseek-ai/dsh');
+  line('');
+  line('  想确认：新开一个 PowerShell 窗口，敲  dsh --version  能打出版本号就对了。');
+  line('');
+  printDesktopVersionHint();
+}
+
+/**
+ * 缺 dsh 的提示，按「`where` 认不认得这个命令」分三档：
+ *   A 档 = `where` 也找不到 → 没装（或没进 PATH）
+ *   B 档 = `where` 找到了、`--version` 跑不起来 → 装了但坏了 / PATH 半生效
+ *   C 档 = 两档都补一句「桌面版可能没带命令行」
+ * 判据本身（缺 dsh 就不继续）不动：exe 不负责装 DSH，这是设计。
+ */
+function printMissingDsh({ where = '', detail = '' } = {}) {
+  if (where) printDshBroken({ where, detail });
+  else printDshAbsent();
 }
 
 function printMissingNpm(detail) {
@@ -293,7 +358,7 @@ export async function runExe({
   // ── ① 环境体检 ───────────────────────────────────────────────
   const check = checkPrerequisites(log);
   if (!check.ok) {
-    if (check.missing === 'dsh') printMissingDsh();
+    if (check.missing === 'dsh') printMissingDsh({ where: check.where, detail: check.detail });
     else printMissingNpm(check.detail);
     line('  ------------------------------------------------------------');
     line('  按任意键关闭这个窗口。');

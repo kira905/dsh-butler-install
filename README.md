@@ -23,7 +23,8 @@
 >   --manifest <path>       清单文件，默认用包内自带的 suite-manifest.json
 > ```
 >
-> 另有一个自足的 Windows exe（双击出界面，自带 node 运行时，不用先装环境）。
+> 另有一个 Windows exe（双击出界面）。它**自带 node 运行时**，所以 exe 自己不用你先装 Node；
+> 但**这台电脑上仍然得先有 DSH 和 npm** —— exe 只装大管家组件，不装 DSH 本身。
 
 ---
 
@@ -130,6 +131,9 @@ npx @kira905/dsh-butler-install --ui --port 45090
 上面那套都要敲命令。**连 PowerShell 都不想开**的话，下载一个 exe 就行：
 
 > **下载地址**：https://pan.baidu.com/s/1RezIxD4LitmEJ9U1FtFqFQ?pwd=pamq（提取码 `pamq`；文件名 `dsh-butler-install-0.3.1-win-x64.exe`，约 89 MB · 93,149,184 B）
+>
+> 说明：**网盘上现在放的就是 0.3.1 这一版**（下载文件名以它为准）。比它新的版本会先在仓里出（`npm run build:exe`），
+> 重新上传网盘之后这里才会跟着更新 —— 文件名里的版本号要是没变，就说明网盘上还没更新的。
 
 用法就三步：
 
@@ -153,9 +157,14 @@ npx @kira905/dsh-butler-install --ui --port 45090
 
 ### 这个 exe 的前提
 
-- **这台电脑上已经装好了 DSH**（`dsh --version` 能打出版本号）。exe **不负责装 DSH**、也不装 Node；
-  缺了它会在黑窗口里用大字告诉你缺什么、怎么装，然后停住等你按任意键（不会一闪就没）。
-- 只有 Windows x64 版。**自带 node 运行时**所以 89 MB —— 好处是你机器上 node 不在 PATH 也能起界面。
+- **这台电脑上已经装好了 DSH，并且有 npm** —— `dsh --version` 与 `npm --version` 都能打出版本号。
+  exe **不负责装 DSH、也不负责装 npm**：开界面之前它先体检这两件事，缺哪个就在黑窗口里用大字
+  说清楚、停住等你按任意键（不会一闪就没）。
+- **装的是「桌面版 / 图形版」DSH 的话，它可能没带命令行** —— 那种情况下装不上大管家（exe 走的是
+  `dsh plugin` 这条命令）。需要再装一个命令行版：`npm i -g @deepseek-ai/dsh`；
+  `dsh --version` 能打出版本号，再双击 exe。
+- 只有 Windows x64 版。**自带 node 运行时**所以 89 MB —— 省的是「**exe 自己**不用装 node 就能跑起来」
+  （exe 里已经打了一份 node.exe）。但请别读成「全流程不依赖本机 node」：**装插件那一步仍然要调这台电脑的 npm**。
 
 ### exe 里到底跑了什么
 
