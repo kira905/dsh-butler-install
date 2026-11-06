@@ -7,6 +7,25 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/); versions
 
 （暂无）
 
+## [0.3.9] - 2026-11-07
+
+> 一句话：**修掉「桌面版用户装完一个插件都看不到」。** exe 双击不带参数时默认落在 `web`，而桌面版只加载 `desktop` —— 装的那套界面永远不加载。
+
+### Fixed
+
+- **默认 profile 的自动判定漏了一种最常见的情况**：原来的自动切 desktop 只在「数据根里只有 `desktop`、没有 `web`」时生效。可**同机装了 CLI 版 + 桌面版**的人两个 profile 都在 ⇒ 不命中 ⇒ 落回 `web`（2026-11-07 00:4x 在本机实测复现：exe 不带参数启动，向导 `profile = web`）。
+- 新增一条判据：**桌面版（Electron）正在运行时，默认就用 `desktop`**（探测得到 `source === 'process'`）。用户显式给 `--profile` 时仍然完全尊重，绝不偷改。
+- 桌面版探测改为**在向导启动时解析一次**并复用（`options.desktopPre`），这样既保留「每请求零 spawn」，又有资格做进程探测（原来探进程这条路在 `--ui` 下根本没启用）。
+
+### Changed
+
+- `test/fixtures/npm-latest-snapshot.json` 刷到当前 registry 真值（三个包 0.5.0/0.5.0/0.3.0 → **0.5.1/0.5.1/0.3.1**），否则离线漂移判据会把「清单已更新」误判成「清单超前于 registry」。
+
+### Tests
+
+- 新增 `test/test-decide-profile.mjs`（11 条）：桌面版正在跑 ⇒ 切 desktop / 显式 `--profile web` 不被覆盖 / 无桌面版保持 web / 找不到自带命令必须报错 / 纯桌面版机器行为不退化。
+- 全套 **701 条断言全过**（0.3.8 是 690）。
+
 ## [0.3.8] - 2026-11-07
 
 > 一句话：**清单三条下界跟上刚发的插件补丁版**（`butler-archive` / `ecosystem-panel` → `^0.5.1`，`session-title-live` → `^0.3.1`）。

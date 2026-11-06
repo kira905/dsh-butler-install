@@ -30,6 +30,8 @@ const modules = [
   'test-registry.mjs',
   // 桌面版（Electron）：认出来、改用自带命令、找不到就硬拒绝
   'test-desktop.mjs',
+  // 默认 profile 的自动判定：桌面版正在跑就必须装 desktop（否则装完界面一个插件都看不到）
+  'test-decide-profile.mjs',
 ];
 
 let pass = 0;

@@ -92,6 +92,17 @@ export async function runEntry({
     out.write(`端口 ${port} 上没有我们自己的向导页（${found.reason}）⇒ 现在起一个。\n`);
   }
 
+  // 桌面版探测**在这里做一次**（允许探进程），结果挂到 options 上给每个请求复用：
+  //  · 向导要求"每请求零 spawn" ⇒ 不能每次请求都去探进程；
+  //  · 而要知道"桌面版正开着"，又必须探进程（source === 'process'）——
+  //    不然同机装了 CLI + 桌面版的人会默认落回 web，装完桌面版界面一个插件都看不到（2026-11-07 实测）。
+  if (options.ui && !options.desktopPre) {
+    try {
+      const { detectDesktop } = await import('../lib/desktop.mjs');
+      options.desktopPre = await detectDesktop({ home: options.home, allowProcessProbe: true });
+    } catch { /* 探测失败就当没桌面版：退回原来的默认 web */ }
+  }
+
   const started = await startServer({ options, port: options.uiPort });
   if (!started.ok) {
     for (const line of started.log) out.write(`${line}\n`);
