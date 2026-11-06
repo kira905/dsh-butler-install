@@ -7,6 +7,40 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/); versions
 
 （暂无）
 
+## [0.3.5] - 2026-11-06
+
+> 一句话：**清单追上了 npm 上真发的那一套** —— 4 条区间刷到 registry 上的当前最新（旧区间会把用户按在旧版上，
+> 而装后自检读同一份清单、照样报绿 ⇒ 假绿），`excluded[]` 里 router 的安装指针从 `@0.2.0` 改成 `@0.4.0`（原来那行指向的版本身后已经落后两个大版本）；
+> **exe 必须跟着重建**：exe 把 `suite-manifest.json` 整份内嵌进 SEA blob，不重建的话双击跑的那只仍旧按老清单装。
+
+### Changed
+
+- **清单 4 条 `versionRange` 刷到 npm latest 的当前大版本**（`node test/range-drift.mjs` 联网判据从 4 漂移 → 全部接受）：
+  `@kira905/dsh-butler-archive` `^0.4.0` → **`^0.5.0`**、`@kira905/dsh-session-title-live` `^0.2.7` → **`^0.3.0`**、
+  `@kira905/dsh-memory-toolkit` `^0.3.0` → **`^0.4.1`**、`@kira905/dsh-quality-toolkit` `^0.2.0` → **`^0.3.0`**。
+  其余 13 条区间本来就接受当前 latest，**一个字节没动**。
+- **`@kira905/dsh-session-title-live` 那条 `note` 原样保留**：它解释「下界为什么必须硬排除 0.2.4–0.2.6」（那三版写的 `source.kind === 'plugin'`
+  被 DSH 0.2.1+ 的日志准入硬拒，会话开几秒就 failed），抬到 `^0.3.0` 之后这条依据仍然成立、仍然值得留在清单里。
+- **`test/fixtures/npm-latest-snapshot.json` 刷到真 npm latest**（`capturedAt` → `2026-11-06T08:29:06+08:00`）：
+  只有上面那 4 项变了，其余 13 项现取一致、未改。不刷的话离线判据会红（新区间在快照看来"超前于 registry"），
+  而那条红抓的正是"快照过期"，不是代码坏了。
+
+### Fixed
+
+- **`excluded[]` 里 router 那行的安装指针是假指针**：`reason` 末句原写 `npm i -g @kira905/dsh-router-toolkit@0.2.0`，
+  而 0.3.0 / 0.4.0 都已发到 npm ⇒ 按那行装会拿到旧版。改成 **`@0.4.0`**。
+
+### 为什么这版必须重建 exe
+
+`scripts/build-exe.mjs` 会把 `suite-manifest.json` 整份打进 SEA blob（exe 是"自带清单"的，不读仓里那份）。
+清单改了而不重建 exe，双击跑的那只就还是**老清单**：一样会假绿，而且因为 exe 是最容易被用户拿去双击的入口，这条最要命。
+本版的 `dist/dsh-butler-install-0.3.5-win-x64.exe` 已按新清单重建，并逐字节核过内嵌清单与仓内 `suite-manifest.json` 一致。
+
+### 已知、这次没动
+
+- **网盘上的 exe 仍是 0.3.1**：上传是另一件事（红线，要主人点头），README 里那段的文件名/体积照旧指向它，
+  不指向网盘上不存在的文件 ⇒ 新版 exe（0.3.5）只在本地 `dist/` 与仓里构建。
+
 ## [0.3.4] - 2026-11-05
 
 > 一句话：**「我运行 exe，它说我没装 DSH」这个反馈的修复** —— exe 的体检判据没变（缺 dsh 就不继续，这是设计），

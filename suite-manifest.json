@@ -15,7 +15,7 @@
     },
     {
       "name": "@kira905/dsh-butler-archive",
-      "versionRange": "^0.4.0",
+      "versionRange": "^0.5.0",
       "type": "plugin",
       "group": "界面",
       "mount": "auto",
@@ -25,7 +25,7 @@
     },
     {
       "name": "@kira905/dsh-session-title-live",
-      "versionRange": "^0.2.7",
+      "versionRange": "^0.3.0",
       "type": "plugin",
       "group": "界面",
       "mount": "auto",
@@ -55,7 +55,7 @@
     },
     {
       "name": "@kira905/dsh-memory-toolkit",
-      "versionRange": "^0.3.0",
+      "versionRange": "^0.4.1",
       "type": "plugin",
       "group": "记忆",
       "mount": "auto",
@@ -137,7 +137,7 @@
     },
     {
       "name": "@kira905/dsh-quality-toolkit",
-      "versionRange": "^0.2.0",
+      "versionRange": "^0.3.0",
       "type": "cli",
       "group": "体检",
       "aliases": ["质量"],
@@ -179,7 +179,7 @@
     },
     {
       "id": "dsh-router-toolkit",
-      "reason": "后建的 Router 工具包，可安装，但**不随大管家套装默认安装** —— 它是\"会派活的那只手\"，要么你已经在用 Router，要么就不该装（装了也不会自己跑）。要单装：`npm i -g @kira905/dsh-router-toolkit@0.2.0`"
+      "reason": "后建的 Router 工具包，可安装，但**不随大管家套装默认安装** —— 它是\"会派活的那只手\"，要么你已经在用 Router，要么就不该装（装了也不会自己跑）。要单装：`npm i -g @kira905/dsh-router-toolkit@0.4.0`"
     }
   ]
 }
