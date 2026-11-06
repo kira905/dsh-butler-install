@@ -19,14 +19,14 @@ profile：fixture（已存在）
   现状：未安装
   动作：安装
   命令：dsh plugin --profile fixture add @fake/plug-b@^0.1.0
-  判据：profile 的 node_modules/@fake/plug-b/package.json 存在（只查文件，不执行） · 实体版本落在 >= 0.1.0 且 < 0.2.0 · dump-config 里组合头恰好 1 行、条目 name 恰好 1 条、该 id 在整棵树里恰好 1 次
+  判据：profile 的 node_modules/@fake/plug-b/package.json 存在（只查文件，不执行） · 实体版本落在 >= 0.1.0 且 < 0.2.0 内，且不落后于注册表上该区间内的最高合规版（取不到注册表时单列"未核"，不冒充通过） · dump-config 里组合头恰好 1 行、条目 name 恰好 1 条、该 id 在整棵树里恰好 1 次
 
 [3/4] CLI · @fake/cli-a
   类型：cli · 期望版本：>= 0.1.0 且 < 0.2.0
   现状：未安装
   动作：安装
   命令：npm i -g @fake/cli-a@^0.1.0
-  判据：命令文件 cli-a 在 .bin 或全局前缀下存在（只查文件，不执行） · 实体版本落在 >= 0.1.0 且 < 0.2.0
+  判据：命令文件 cli-a 在 .bin 或全局前缀下存在（只查文件，不执行） · 实体版本落在 >= 0.1.0 且 < 0.2.0 内，且不落后于注册表上该区间内的最高合规版（取不到注册表时单列"未核"，不冒充通过）
 
 [4/4] CLI · @fake/cli-b
   类型：cli · 期望版本：>= 0.1.0 且 < 0.2.0

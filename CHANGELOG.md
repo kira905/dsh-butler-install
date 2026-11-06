@@ -7,6 +7,68 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/); versions
 
 （暂无）
 
+## [0.3.7] - 2026-11-06
+
+> 一句话：**结掉 0.3.6 留下的两条 Known issue。**
+> ① 命令不再过 shell —— 根因是 Windows 的 `cmd.exe /c` 把 `pkg@^x.y.z` 里的 `^` 当转义符吃掉，
+> 于是 `npm i -g` 与 `dsh plugin add` 双双退化成"精确钉死下界"，而老自检只查"落在区间内"，
+> 下界当然在区间内 ⇒ 整批 rc=0 全绿、装的全是旧版（实测 11/11 个 CLI 包如此，其中一个还装到了
+> 已 deprecate 的 0.1.0）。
+> ② 桌面版（Electron）不再是"结构性不支持"：认出来之后**改用它自带的那条 dsh.cmd**，找不到就硬拒绝。
+> 装后自检同时升级：从"落在区间内"改成"落在区间内 **且** 是区间内注册表当前可用的最高合规版"。
+
+### Fixed
+
+- **缺陷 A · 参数不许过 shell（最严重）**：`lib/exec.mjs` 的 `spawn(cmdline, {shell:true})` 换成
+  `spawn(exe, args, {shell:false})`，并把 `.cmd` 壳**解析成它真正要跑的可执行 + 参数**：
+  `npm.cmd → node npm-cli.js`、`dsh.cmd → node lib/bin.js`、桌面版 `dsh.cmd → "DeepSeek Harness.exe"
+  --expose-internals … dsh-desktop-host/lib/cli.js`（连同壳里 `set` 的环境变量，例如 `ELECTRON_RUN_AS_NODE=1`）。
+  为什么不能只写 `shell:false`：Node 18.20+ 起 `spawn('npm.cmd')` 直接 **EINVAL**，裸 `spawn('npm')` 是 **ENOENT**（本轮实测）。
+  解析不出来才退回 `cmd.exe /d /s /c`，且参数按**两层**解析的实测结果转义（`^` 要写四个 —— 写两个仍会被批处理再吃一次）。
+  🔴 超时清理的 `taskkill` 本来就是 `.exe`，未回到 shell。
+- **PATH 上同名命令挑错壳**：npm 全局目录里 `dsh`（bash 脚本）、`dsh.cmd`、`dsh.ps1` 同时存在，
+  老逻辑"无扩展优先"会拿到那个 spawn 必失败的 bash 脚本。新增 `findExecutableOnPath()`，按 `.exe → .cmd → .bat` 排。
+- **缺陷 B · 桌面版（Electron）**：新增 `lib/desktop.mjs`。探测三处证据（数据根里的 `profiles/desktop`、
+  `DSH_DESKTOP_DIR`/`DSH_DESKTOP_CLI`、常见安装目录、运行中的桌面版进程反查），认出后
+  `--profile desktop` 的命令改用 `<安装目录>\resources\runtime\cli\bin\dsh.cmd`。
+  找不到自带命令 ⇒ **rc=2 硬拒绝** + 桌面版专属提示（不再拿 npm 版 CLI 去撞宿主的
+  `profile "desktop" is managed exclusively by the Electron application`）。
+  桌面版只加载 `desktop` 这一个 profile：显式 `--profile web` 时打一行提示但不阻断（同机双装是合法状态）。
+- **桌面版的挂载判据**：桌面版 CLI **不提供** `--dump-config`（实测自带命令与 PATH 上的 CLI 都回同一句拒绝），
+  老实现只能记"未知" ⇒ 桌面版用户永远看不到挂载结论。改读 profile 的 `dsh.profile.bundles`
+  （Electron 宿主按它装配，登记即生效）。
+
+### Changed
+
+- **装后判据升级（判据要能红）**：`lib/registry.mjs` 新增「注册表上这个区间内现在最高是哪一版」，
+  用一条只读命令 `npm view <包>@<区间> version --json`，同进程内按包缓存（每步判据 + 收尾整批核对不会重复问）。
+  判据从「落在区间内」改成「落在区间内 **且** 不落后于区间内最高合规版」；
+  取不到注册表时**不冒充通过**：状态记 `unknown`，汇总里单列「N 项没核是否落后」。
+- **新增 `--no-registry`**：显式关掉那条核对（离线 / 私有源要登录时用），关掉后汇总里照样写明"没核过"。
+- `--ui` 的默认 profile 在"数据根里只有桌面版自建的 `desktop` profile、没有 web"时自动用 `desktop`，
+  并在预览里标明来源（`profileSource: auto-desktop`）；用户亲手写的 `--profile` 一律不改。
+- `buildSuiteState` 的 `state` 增加 `desktop` 与 `registryCheck` 两格，向导页与 CLI 同源。
+
+### Tests
+
+- 断言 **613 → 690**（新增 77 条），全部通过。三个新夹具：
+  - `test/test-exec-resolve.mjs`：命令解析 + `^` 保真（**子进程真的收到了什么**，不是"函数返回了什么"），
+    含阴性对照（同一串过一遍 `cmd /c` 必须丢 `^`，证明判据不是空转）。
+  - `test/test-registry.mjs`：区间内但明显落后 ⇒ **必须判红**（端到端 rc=3）；取不到注册表 ⇒ `unknown`；`--no-registry` ⇒ 汇总明说没核。
+  - `test/test-desktop.mjs`：伪造一套桌面版安装目录 ⇒ 命令改用自带命令、装进 `dsh.profile.bundles`、
+    卸干净；再把目录撤掉 ⇒ rc=2 + 桌面版专属提示。
+- 金标 `test/fixtures/legacy-dryrun.txt` 随判据文案同步更新（守护的是"CLI 输出不被 --ui 改造污染"，不是判据文案本身）。
+
+### 这一版必须重建 exe
+
+exe 把向导页与 `suite-manifest.json` 内嵌进 SEA blob，**代码改了不重建 = 双击跑的还是旧逻辑**
+（旧逻辑恰恰是"每项都装成下界"那套）。验收不能看体积：要拿切出来的内嵌段 sha256 与仓内文件逐字节比。
+
+### Known issue / 待拍板
+
+- **`--uninstall` 不带 `--apply` 会被当成演练**（演练优先的既有语义）。help 里没写清，容易误解。
+  本轮没动它 —— 改语义会影响 `--ui` 的"卸载这次装的"。已在交付报告里列为待拍板。
+
 ## [0.3.6] - 2026-11-06
 
 > 一句话：**清单 10 条下界刷到 npm 上当前真发的版本**，其中 `@kira905/dsh-ops-toolkit` 那条是**安全修复**

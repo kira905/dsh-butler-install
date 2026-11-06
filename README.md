@@ -26,12 +26,14 @@
 > 另有一个 Windows exe（双击出界面）。它**自带 node 运行时**，所以 exe 自己不用你先装 Node；
 > 但**这台电脑上仍然得先有 DSH 和 npm** —— exe 只装大管家组件，不装 DSH 本身。
 >
-> 🔴 **桌面版（Electron）DSH 装不了这一套 —— 结构性限制，不是 bug。**
-> 桌面版的 profile 名是 `desktop`，而宿主把 `desktop` 保留给 Electron：**npm 装的 CLI 会直接拒绝它的插件管理请求**。
-> 实测 `dsh plugin --profile desktop add "@kira905/dsh-ecosystem-panel@^0.5.0"` ⇒
-> `error: profile "desktop" is managed exclusively by the Electron application`，rc=1。
-> 本工具的插件那 6 步全部走 `dsh plugin`，所以对桌面版无效；**桌面版要用它自己内置的命令运行时管插件**。
-> 本工具目前只支持 **npm / CLI 方式装的 DSH**。
+> **桌面版（Electron）DSH：能装，但要认对门。**
+> 桌面版把 `desktop` 这个 profile 留给了自己 —— npm 装的 CLI 去改它会被宿主直接拒绝
+> （`error: profile "desktop" is managed exclusively by the Electron application`，rc=1）。
+> 但桌面版**自带一条命令** `<安装目录>\resources\runtime\cli\bin\dsh.cmd`，用它加 `--profile desktop` 是能成的。
+> 本工具会自己认：数据根里有 `profiles/desktop`，或者能在常见安装目录 / 正在运行的桌面版进程里
+> 找到那条自带命令 ⇒ 用 `--profile desktop` 时**自动改用它**（命令原语不变，只是换了一条壳）。
+> 找不到自带命令时**不会硬来**：直接停手（rc=2），并告诉你怎么指路（`DSH_DESKTOP_DIR`）。
+> ⚠️ 桌面版只加载 `desktop` 这一个 profile；往 `--profile web` 里装 = 装了看不见。
 
 ---
 
@@ -40,7 +42,11 @@
 > 卖点不是"一键"，是"一键之后的可验证性"。
 > 一个包"装完 rc=0 但其实没生效"是这套生态里真实存在过的坑（宿主只会吐一行
 > `declares no dsh.bundle` 警告，然后把它装成普通依赖）。本工具逐包核对**包实体在不在、
-> 版本落不落在期望区间、插件到底有没有进组合列表**，任一条不过就判这一步失败。
+> 版本落不落在期望区间、装上来的是不是这个区间里现在能拿到的最新、插件到底有没有进组合列表**，
+> 任一条不过就判这一步失败。
+> 第四条"是不是最新"是 0.3.7 加的：只查"落在区间内"时，"装成了区间下界"也会绿 ——
+> 全批 rc=0，实际上装的全是旧版。取不到注册表（离线 / 私有源）时**不冒充通过**：
+> 汇总里单列一行「N 项没核是否落后」，或者用 `--no-registry` 显式关掉这条判据。
 
 ## 30 秒上手
 
@@ -167,9 +173,10 @@ npx @kira905/dsh-butler-install --ui --port 45090
 - **这台电脑上已经装好了 DSH，并且有 npm** —— `dsh --version` 与 `npm --version` 都能打出版本号。
   exe **不负责装 DSH、也不负责装 npm**：开界面之前它先体检这两件事，缺哪个就在黑窗口里用大字
   说清楚、停住等你按任意键（不会一闪就没）。
-- **装的是「桌面版 / 图形版」DSH 的话，它可能没带命令行** —— 那种情况下装不上大管家（exe 走的是
-  `dsh plugin` 这条命令）。需要再装一个命令行版：`npm i -g @deepseek-ai/dsh`；
-  `dsh --version` 能打出版本号，再双击 exe。
+- **装的是「桌面版 / 图形版」DSH 的话**：用 `--profile desktop`。桌面版自带一条命令行
+  （`<安装目录>\resources\runtime\cli\bin\dsh.cmd`），本工具会自己找到它并用它装；
+  找不到时会停手告诉你用 `DSH_DESKTOP_DIR` 指一下安装目录。**别用 `--profile web`** ——
+  桌面版不加载那个 profile，装了看不见。同一个 `dsh --version` 能打出版本号说明 CLI 版也在。
 - 只有 Windows x64 版。**自带 node 运行时**所以 89 MB —— 省的是「**exe 自己**不用装 node 就能跑起来」
   （exe 里已经打了一份 node.exe）。但请别读成「全流程不依赖本机 node」：**装插件那一步仍然要调这台电脑的 npm**。
 

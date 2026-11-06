@@ -24,6 +24,12 @@ const modules = [
   // 清单是单一真相，但真相会烂：这一格拿仓内 npm latest 快照核清单的区间还接不接受
   // 当前发布出来的版本（零网络；真网络版本 = 直接跑 `node test/range-drift.mjs`）。
   'range-drift.mjs',
+  // 命令解析：不许过 shell（Windows 的 cmd 会把 `pkg@^x.y.z` 里的 ^ 吃掉 ⇒ 每项都装成下界）
+  'test-exec-resolve.mjs',
+  // 装后判据的第二半：装上来的是不是"区间内现在能拿到的最新"（区间内但落后必须判红）
+  'test-registry.mjs',
+  // 桌面版（Electron）：认出来、改用自带命令、找不到就硬拒绝
+  'test-desktop.mjs',
 ];
 
 let pass = 0;
