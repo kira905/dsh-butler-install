@@ -5,7 +5,7 @@
   "items": [
     {
       "name": "@kira905/dsh-ecosystem-panel",
-      "versionRange": "^0.5.0",
+      "versionRange": "^0.5.1",
       "type": "plugin",
       "group": "核心",
       "mount": "auto",
@@ -15,7 +15,7 @@
     },
     {
       "name": "@kira905/dsh-butler-archive",
-      "versionRange": "^0.5.0",
+      "versionRange": "^0.5.1",
       "type": "plugin",
       "group": "界面",
       "mount": "auto",
@@ -25,7 +25,7 @@
     },
     {
       "name": "@kira905/dsh-session-title-live",
-      "versionRange": "^0.3.0",
+      "versionRange": "^0.3.1",
       "type": "plugin",
       "group": "界面",
       "mount": "auto",

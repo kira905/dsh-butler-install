@@ -7,6 +7,24 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/); versions
 
 （暂无）
 
+## [0.3.8] - 2026-11-07
+
+> 一句话：**清单三条下界跟上刚发的插件补丁版**（`butler-archive` / `ecosystem-panel` → `^0.5.1`，`session-title-live` → `^0.3.1`）。
+> 那三个包在 0.5.1 / 0.3.1 里删掉了 `peerDependencies` 里的 `dsh`（那句区间对预发布宿主必然误报，纯噪音），本版让安装清单指向它们。
+
+### Changed
+
+- `suite-manifest.json` 三条 `versionRange` 下界：`dsh-butler-archive` `^0.5.0`→**`^0.5.1`**、`dsh-ecosystem-panel` `^0.5.0`→**`^0.5.1`**、`dsh-session-title-live` `^0.3.0`→**`^0.3.1`**。其余 14 条一动没动。
+- **exe 已跟着重建**（清单内嵌 SEA blob，不重建那只双击的 exe 会照旧按老清单装）。
+
+### 为什么必须发这一版
+
+清单文件在发布包里（`files` 含 `suite-manifest.json`），不改版本号发不出去；而不刷这三条，用户装到的还是旧的 0.5.0 / 0.3.0 —— 那条 peer 噪音就还在。
+
+### 配套
+
+- 复验器具 `scripts/verify-release.mjs` 五道闸一起跑：tarball 重下核 shasum / 隔离装无 peer 警告 / 静态 peer 扫描 / 清单↔实体版本 / **exe 内嵌清单逐字节**。
+
 ## [0.3.7] - 2026-11-06
 
 > 一句话：**结掉 0.3.6 留下的两条 Known issue。**
