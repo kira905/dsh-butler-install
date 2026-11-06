@@ -7,6 +7,20 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/); versions
 
 （暂无）
 
+## [0.3.10] - 2026-11-07
+
+> 一句话：**清单里多了第 18 项 —— `@kira905/dsh-butler-engine`（真调度内核）**，其余统统不变。
+
+### Added
+
+- `suite-manifest.json` 新增 `@kira905/dsh-butler-engine`（`type: cli` / 组 `CLI` / 探针 `butler-tickd` 存在性）。装在 `dsh-butler-core` 之后。注意：它是**真常驻调度**，装完一条作业都不会自己跑（不附带作业脚本，默认全关），要哪条自己在 `butler-autonomy.json` 里放行。
+- `test/fixtures/npm-latest-snapshot.json` 加同一条（0.1.0），否则离线漂移判据会把新条目判成「清单超前于 registry」。
+- `test/test-manifest.mjs` 的形状守卫同步：17→18 项、11→12 条命令行（这是**刻意的审核点**，加清单必须来改）。
+
+### Changed
+
+- 随包清单条数 **17 → 18**（插件仍 6 条，命令行 11 → 12 条）。exe 已随之重建。
+
 ## [0.3.9] - 2026-11-07
 
 > 一句话：**修掉「桌面版用户装完一个插件都看不到」。** exe 双击不带参数时默认落在 `web`，而桌面版只加载 `desktop` —— 装的那套界面永远不加载。
