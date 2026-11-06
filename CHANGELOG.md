@@ -7,6 +7,50 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/); versions
 
 （暂无）
 
+## [0.3.6] - 2026-11-06
+
+> 一句话：**清单 10 条下界刷到 npm 上当前真发的版本**，其中 `@kira905/dsh-ops-toolkit` 那条是**安全修复**
+> —— 旧下界 `^0.1.0` 会把用户装到已 deprecate 的 0.1.0（npm 告警原文：含真实账号残留，0.1.2 已清除）。
+> README 补两处：项数 16→17、**桌面版（Electron）结构性不支持**的警示。
+
+### Changed
+
+- **10 条 `versionRange` 下界刷到 npm latest 当前版**（`node test/range-drift.mjs` 判据 17/17 全接受）：
+  `host-adapter-client` `^0.1.1`→**`^0.1.2`**、`board-toolkit` `^0.1.2`→**`^0.1.3`**、`session-toolkit` `^0.1.1`→**`^0.1.2`**、
+  `net-toolkit` `^0.1.0`→**`^0.1.1`**、`notekit` `^0.1.0`→**`^0.1.1`**、`nurse` `^0.1.0`→**`^0.1.1`**、
+  `firstaid` `^0.1.3`→**`^0.1.4`**、`ops-toolkit` `^0.1.0`→**`^0.1.2`**（⚠️ 安全）、
+  `closure-tools` `^0.1.1`→**`^0.1.2`**、`diagnostics-extra` `^0.1.0`→**`^0.1.2`**。
+  其余 7 条本来就等于 latest，一个字节没动。**只升不降**，脚本带备份 + 回读校验。
+
+### 为什么下界必须等于"想给用户的版本"（本轮实测的原因）
+
+2026-11-06 隔离真装 17 项（rc=0 全绿）抓到：**11/11 个 CLI 包的实装版本正好等于清单下界**，其中 10 个落后 npm latest，
+`dsh-ops-toolkit` 装到被 deprecate 的 `0.1.0`。
+
+根因是 `lib/exec.mjs` 起子进程用 `shell: true` ⇒ Windows 走 `cmd.exe /c`，而 **`^` 是 cmd 的转义符**：
+
+```
+cmd /c "echo @kira905/dsh-ops-toolkit@^0.1.0"
+→ @kira905/dsh-ops-toolkit@0.1.0        ← ^ 被吃掉
+```
+
+⇒ `npm i -g <包>@^x.y.z` / `dsh plugin --profile <p> add <包>@^x.y.z` 双双退化成**精确钉死下界**。
+而装后自检的判据是"实体版本落在期望区间内"，下界当然在区间内 ⇒ **永远绿，这个错自检发现不了**。
+
+⚠️ 本版只是把下界顶到正确位置（止血）；**`shell:true` 那处代码缺陷另开卡修**（改 `shell:false` + 显式调 `npm.cmd`/`dsh.cmd`，并让自检能判红"区间内但明显落后"）。
+
+### Fixed
+
+- **README 项数 16 → 17**（3 处）：清单自 `dsh-task-board-local` 并入后就是 17 项，README 一直没跟上。
+- **README 新增桌面版警示**：桌面版（Electron）的 `desktop` profile 由 Electron 独占，**npm 装的 CLI 直接拒绝其插件管理请求**
+  （实测 `dsh plugin --profile desktop add …` ⇒ `error: profile "desktop" is managed exclusively by the Electron application`，rc=1）。
+  本工具插件那 6 步全走 `dsh plugin` ⇒ 对桌面版结构性无效；写在首屏，避免用户装完一个插件都看不到。
+
+### Known issue（本版未修）
+
+- **桌面版适配**：只做了"写清楚不支持"，没做检测与硬拒绝 —— 桌面版用户跑本工具仍可能往 `profiles/web` 装进一套界面永远不加载的插件（假绿）。
+- **`shell:true` 吃 `^`**：见上。
+
 ## [0.3.5] - 2026-11-06
 
 > 一句话：**清单追上了 npm 上真发的那一套** —— 4 条区间刷到 registry 上的当前最新（旧区间会把用户按在旧版上，

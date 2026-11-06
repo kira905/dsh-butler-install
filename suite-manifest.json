@@ -35,7 +35,7 @@
     },
     {
       "name": "@kira905/dsh-host-adapter-client",
-      "versionRange": "^0.1.1",
+      "versionRange": "^0.1.2",
       "type": "plugin",
       "group": "界面",
       "mount": "manual",
@@ -65,7 +65,7 @@
     },
     {
       "name": "@kira905/dsh-board-toolkit",
-      "versionRange": "^0.1.2",
+      "versionRange": "^0.1.3",
       "type": "cli",
       "group": "CLI",
       "aliases": ["看板"],
@@ -83,7 +83,7 @@
     },
     {
       "name": "@kira905/dsh-session-toolkit",
-      "versionRange": "^0.1.1",
+      "versionRange": "^0.1.2",
       "type": "cli",
       "group": "CLI",
       "aliases": ["会话"],
@@ -92,7 +92,7 @@
     },
     {
       "name": "@kira905/dsh-net-toolkit",
-      "versionRange": "^0.1.0",
+      "versionRange": "^0.1.1",
       "type": "cli",
       "group": "CLI",
       "aliases": ["网络"],
@@ -101,7 +101,7 @@
     },
     {
       "name": "@kira905/dsh-notekit",
-      "versionRange": "^0.1.0",
+      "versionRange": "^0.1.1",
       "type": "cli",
       "group": "CLI",
       "aliases": ["笔记"],
@@ -110,7 +110,7 @@
     },
     {
       "name": "@kira905/dsh-nurse",
-      "versionRange": "^0.1.0",
+      "versionRange": "^0.1.1",
       "type": "cli",
       "group": "体检",
       "aliases": ["小护士", "体检"],
@@ -119,7 +119,7 @@
     },
     {
       "name": "@kira905/dsh-firstaid",
-      "versionRange": "^0.1.3",
+      "versionRange": "^0.1.4",
       "type": "cli",
       "group": "体检",
       "aliases": ["急救"],
@@ -128,7 +128,7 @@
     },
     {
       "name": "@kira905/dsh-ops-toolkit",
-      "versionRange": "^0.1.0",
+      "versionRange": "^0.1.2",
       "type": "cli",
       "group": "体检",
       "aliases": ["运维"],
@@ -146,7 +146,7 @@
     },
     {
       "name": "@kira905/dsh-closure-tools",
-      "versionRange": "^0.1.1",
+      "versionRange": "^0.1.2",
       "type": "cli",
       "group": "体检",
       "aliases": ["闭包"],
@@ -155,7 +155,7 @@
     },
     {
       "name": "@kira905/dsh-diagnostics-extra",
-      "versionRange": "^0.1.0",
+      "versionRange": "^0.1.2",
       "type": "cli",
       "group": "体检",
       "aliases": ["对账", "诊断"],
