@@ -65,7 +65,7 @@
     },
     {
       "name": "@kira905/dsh-memory-toolkit",
-      "versionRange": "^0.5.1",
+      "versionRange": "^0.5.2",
       "type": "plugin",
       "group": "记忆",
       "mount": "auto",

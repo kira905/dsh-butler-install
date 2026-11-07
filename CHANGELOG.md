@@ -7,6 +7,19 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/); versions
 
 （暂无）
 
+## [0.3.17] - 2026-11-08
+
+> 一句话：**清单里 `@kira905/dsh-memory-toolkit` 下界跟上 `^0.5.2`**（那一版订正了命令表里三行「缺省是否动库」）。
+
+### Changed
+
+- `suite-manifest.json`：`@kira905/dsh-memory-toolkit` `^0.5.1` → **`^0.5.2`**。
+  0.5.2 是纯文档订正：`dsh-mem-sync` / `dsh-mem-sweep` / `dsh-mem-doc-index` 三条**缺省真写**
+  （写向量库 / 索引库），0.5.1 的表错写成「干跑」。对「装出来的功能」没差别，但装到错的那版会误导人对着生产库跑。
+- `test/fixtures/npm-latest-snapshot.json`：`dsh-memory-toolkit` `0.5.1` → `0.5.2`，`capturedAt` 刷新。
+- `dist/dsh-butler-install-0.3.17-win-x64.exe` 重建（exe 内嵌清单变了）。
+- 未上传网盘。
+
 ## [0.3.16] - 2026-11-08
 
 > 一句话：**清单里 `@kira905/dsh-memory-toolkit` 下界刷到 `^0.5.1`**（那一版才把 15 条引擎 CLI 接上 `bin`）。
