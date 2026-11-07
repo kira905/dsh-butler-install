@@ -65,13 +65,13 @@
     },
     {
       "name": "@kira905/dsh-memory-toolkit",
-      "versionRange": "^0.5.0",
+      "versionRange": "^0.5.1",
       "type": "plugin",
       "group": "记忆",
       "mount": "auto",
       "aliases": ["记忆"],
       "probe": { "kind": "existence" },
-      "note": "记忆工具：自带一份记忆实现（子包 dsh-memory-local）+ 三个命令行（dsh-memory-audit / export / summary）。它与官方记忆插件抢同一个位置，二选一；装之前先看 profile 的组合列表里有没有官方那份。下界钉在 0.2.0 有据：0.2.0 起主包自己带 dsh.bundle（patch 指向 ./cordis.patch.yml），装进 profile 就会被挂载，本项按「必须挂载」判；0.1.x 那版把声明放在子包里，装完是普通依赖、挂载判据只能报 ⏭（不算通过）。⚠️ 0.x 的插入号只吃补丁号，0.1.x → 0.2.0 这种跨小版本（0 阶段的真·大版本）旧区间不会自动接受 —— 想让它变绿只能改区间，它不会自愈。"
+      "note": "记忆工具：自带一份记忆实现（子包 dsh-memory-local）+ 19 条命令行（4 条 dsh-memory-audit / export / summary / lineage + 15 条引擎 CLI，前缀 dsh-mem-：selfcheck / sync / sweep / recall / serve-start / doc-index* / layer-migrate / layer-move / band-sentinel / domain-tags / distill* / pitfall-hook）。它与官方记忆插件抢同一个位置，二选一；装之前先看 profile 的组合列表里有没有官方那份。下界钉在 0.5.1 有据：0.5.1 起那 15 条引擎 CLI 才有 bin（此前只能 node memory-engine/cli/<名>.mjs 敲，敲不出来），且修了 13 个脚本缺 shebang 导致 npm shim 无解释器的坑（已发的 dsh-memory-summary 因此一直是坏的）；再早些的 0.2.0 起主包自己带 dsh.bundle（patch 指向 ./cordis.patch.yml），装进 profile 就会被挂载，本项按「必须挂载」判 —— 两条理由取严的就是 0.5.1。⚠️ 0.x 的插入号只吃补丁号，0.5.0 → 0.5.1 这种补丁级区间变化旧区间不会自动接受（^0.5.0 本身接受 0.5.1，所以本条其实自愈；跨小版本 0.1.x → 0.2.0 那种才不自愈）—— 想让它变绿只能改区间。"
     },
     {
       "name": "@kira905/dsh-board-toolkit",

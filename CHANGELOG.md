@@ -7,6 +7,22 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/); versions
 
 （暂无）
 
+## [0.3.16] - 2026-11-08
+
+> 一句话：**清单里 `@kira905/dsh-memory-toolkit` 下界刷到 `^0.5.1`**（那一版才把 15 条引擎 CLI 接上 `bin`）。
+
+### Changed
+
+- `suite-manifest.json`：`@kira905/dsh-memory-toolkit` `^0.5.0` → **`^0.5.1`**。
+  0.5.1 起 `memory-engine/cli/` 那 15 条才有 `bin`（前缀 `dsh-mem-`），并修了 13 个脚本缺 shebang
+  导致 npm shim 无解释器的坑（已发的 `dsh-memory-summary` 因此一直是坏的 —— Windows 上静默 rc 0 无输出）。
+  本项按「命令能敲出来」判，低于 0.5.1 装完敲不出来。
+- `suite-manifest.json` 同条 `note`：口径从「三个命令行」改成 **19 条**（4 条 `dsh-memory-*` + 15 条 `dsh-mem-*`），
+  并把下界理由一并改到 0.5.1（原 0.2.0 的挂载理由仍成立，取严的那条写进 note）。
+- `test/fixtures/npm-latest-snapshot.json`：`dsh-memory-toolkit` `0.5.0` → `0.5.1`（离线夹具跟现实对齐），`capturedAt` 随之刷新。
+- `dist/dsh-butler-install-0.3.16-win-x64.exe` 重建（exe 内嵌清单变了，不重建闸⑤必红）。
+- 未上传网盘（上传属主人点头项）。
+
 ## [0.3.15] - 2026-11-08
 
 > 一句话：**清单里 `@kira905/dsh-memory-toolkit` 下界刷到 `^0.5.0`**（记忆包出了会话捕获管线）。
