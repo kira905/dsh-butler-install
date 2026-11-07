@@ -7,6 +7,17 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/); versions
 
 （暂无）
 
+## [0.3.15] - 2026-11-08
+
+> 一句话：**清单里 `@kira905/dsh-memory-toolkit` 下界刷到 `^0.5.0`**（记忆包出了会话捕获管线）。
+
+### Changed
+
+- `suite-manifest.json`：`@kira905/dsh-memory-toolkit` `^0.4.1` → **`^0.5.0`**。
+  0.5.0 新增「会话捕获管线」（自己的会话日志 → 候选 → 账本 → 批次撤回）、相似度模块收敛与四个只读探针；
+  上界不封，装最新。
+- `test/fixtures/npm-latest-snapshot.json`：`dsh-memory-toolkit` `0.4.1` → `0.5.0`（离线夹具跟现实对齐）。
+
 ## [0.3.14] - 2026-11-08
 
 > 一句话：**安装清单加第 19 项 —— 开源出去的大管家面板 `@kira905/dsh-butler-panel@0.9.0`**（界面 / plugin / 自动挂载）。
