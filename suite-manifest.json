@@ -83,7 +83,7 @@
     },
     {
       "name": "@kira905/dsh-butler-engine",
-      "versionRange": "^0.2.1",
+      "versionRange": "^0.2.2",
       "type": "cli",
       "group": "CLI",
       "aliases": ["调度内核", "自治引擎"],

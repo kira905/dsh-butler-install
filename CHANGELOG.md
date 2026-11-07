@@ -7,6 +7,18 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/); versions
 
 （暂无）
 
+## [0.3.13] - 2026-11-07
+
+> 一句话：**清单里调度内核的下界抬到 `^0.2.2`**（脱敏残留收尾版），其余不变。
+
+### Changed
+
+- `suite-manifest.json`：`@kira905/dsh-butler-engine` 的 `versionRange` `^0.2.1` → `^0.2.2`
+  （0.2.2 只改注释/作业表登记/占位写法与 `.gitignore`，**没有行为变更**；抬下界是为了让新装机器直接拿到
+  「脱敏扫描待复核 0」的那份）。
+- `test/fixtures/npm-latest-snapshot.json`：同一条快照 `0.2.1` → `0.2.2`，`capturedAt` 随之刷新。
+- exe 已随本版重建（内嵌清单与本文件逐字节一致）。
+
 ## [0.3.10] - 2026-11-07
 
 > 一句话：**清单里多了第 18 项 —— `@kira905/dsh-butler-engine`（真调度内核）**，其余统统不变。
