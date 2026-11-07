@@ -7,6 +7,26 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/); versions
 
 （暂无）
 
+## [0.3.14] - 2026-11-08
+
+> 一句话：**安装清单加第 19 项 —— 开源出去的大管家面板 `@kira905/dsh-butler-panel@0.9.0`**（界面 / plugin / 自动挂载）。
+
+### Added
+
+- `suite-manifest.json` 新增 `@kira905/dsh-butler-panel`（`^0.9.0` · group=界面 · mount=auto）：
+  生态总览 / 任务 / 日报周报 / 资产一屏看完，宿主半 + 浏览器半都在包内，装完即挂载。
+  浏览器端依赖 `@kira905/dsh-host-adapter-client`（清单里单列，两条都装才有界面）。
+  ⚠️ 包里**刻意不带任何图片**：仓内 271 张截图是视觉回归基线、画面里含内部信息，一律不进货。
+- `test/fixtures/npm-latest-snapshot.json` 补 `dsh-butler-panel@0.9.0`。
+
+### Changed
+
+- 形状守卫跟着改：清单 **18 → 19 项**、插件 **6 → 7 项**（`test/test-manifest.mjs` 里是显式审核点，改清单必须同时来改它）。
+
+### Tests
+
+- **701 条断言全过**。
+
 ## [0.3.13] - 2026-11-07
 
 > 一句话：**清单里调度内核的下界抬到 `^0.2.2`**（脱敏残留收尾版），其余不变。

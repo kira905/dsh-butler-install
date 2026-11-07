@@ -54,6 +54,16 @@
       "note": "看板界面插件：从上游任务看板插件 fork 出来、已与上游脱钩，装完侧边栏出现「任务看板」（宿主半 + 浏览器半都在包内）。它只带 1 个运行时依赖（schemastery），peer 依赖 react 由宿主自带，别再单独装。⚠️ 它与官方任务看板插件抢同一个位置，二选一；装之前先看 profile 的组合列表里有没有官方那份，两个都挂上会互相顶。⚠️ 界面在它、命令行不在它 —— 那 30 个看板命令（board-card / board-card-run / board-act …）在另一条 @kira905/dsh-board-toolkit 里，要命令行就两条都装。下界钉在 1.1.5 有据：1.1.5（2026-10-19）是当前 npm latest，发布件自带 dsh.bundle（patch 指向 ./cordis.patch.yml）+ dsh.client，装进 profile 就会被挂载，本项按「必须挂载」判；0.0.0-stage / 1.1.4 没逐一核过，别往回降。"
     },
     {
+      "name": "@kira905/dsh-butler-panel",
+      "versionRange": "^0.9.0",
+      "type": "plugin",
+      "group": "界面",
+      "mount": "auto",
+      "aliases": ["管家面板", "大管家面板"],
+      "probe": { "kind": "existence" },
+      "note": "大管家面板：生态总览 / 任务 / 日报周报 / 资产，一屏看完（宿主半 + 浏览器半都在包内，装完即挂载）。浏览器端依赖 @kira905/dsh-host-adapter-client（上面那条单列了，两条都装才有界面）。⚠️ 包里刻意不带任何图片：仓内 271 张截图是视觉回归基线、画面里含内部信息，一律不进货。⚠️ 别和 @kira905/dsh-ecosystem-panel 搞混：生态面板是「只读体检」，管家面板是「日常操作」。"
+    },
+    {
       "name": "@kira905/dsh-memory-toolkit",
       "versionRange": "^0.4.1",
       "type": "plugin",

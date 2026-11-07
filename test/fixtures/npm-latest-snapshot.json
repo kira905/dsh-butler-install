@@ -1,6 +1,6 @@
 {
   "_comment": "npm 上各包 latest 的取数快照，供 `node test/range-drift.mjs --offline <本文件>` 与 test/run-all.mjs 离线复核。刷新方式 = 逐包 `npm view <pkg> version` 后覆盖本文件；capturedAt 必须跟着改，它是这份数据「什么时候是真的」的唯一凭据。",
-  "capturedAt": "2026-11-07T06:43:00.000Z",
+  "capturedAt": "2026-11-07T17:17:12.061Z",
   "source": "npm view <pkg> version（真网络，逐包 18 项；@kira905/dsh-butler-engine 0.2.2 = 脱敏残留收尾版，随本次发布刷新）",
   "registry": "https://registry.npmjs.org",
   "packages": {
@@ -21,6 +21,7 @@
     "@kira905/dsh-ops-toolkit": "0.1.2",
     "@kira905/dsh-quality-toolkit": "0.3.0",
     "@kira905/dsh-closure-tools": "0.1.2",
-    "@kira905/dsh-diagnostics-extra": "0.1.2"
+    "@kira905/dsh-diagnostics-extra": "0.1.2",
+    "@kira905/dsh-butler-panel": "0.9.0"
   }
 }

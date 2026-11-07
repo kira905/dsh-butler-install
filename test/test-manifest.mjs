@@ -175,8 +175,9 @@ export async function run(c) {
   // 形状守卫：这里刻意钉死条数，改清单的人必须同时来改这里（一个显式的审核点），
   // 不是为了让判据好过 —— 0.3.1 加了 @kira905/dsh-task-board-local（界面/plugin），16→17、5→6。
   // 0.3.10 加了 @kira905/dsh-butler-engine（CLI/cli，开源自治引擎内核），17→18、11→12。
-  c.eq(real.items.length, 18, '随包清单应有 18 项（6 插件 + 12 命令行）');
-  c.eq(real.items.filter((i) => i.type === 'plugin').length, 6, '随包清单里插件应为 6 项');
+  // 0.3.14 加了 @kira905/dsh-butler-panel（界面/plugin，开源大管家面板），18→19、6→7。
+  c.eq(real.items.length, 19, '随包清单应有 19 项（7 插件 + 12 命令行）');
+  c.eq(real.items.filter((i) => i.type === 'plugin').length, 7, '随包清单里插件应为 7 项');
   c.eq(real.items.filter((i) => i.type === 'cli').length, 12, '随包清单里命令行应为 12 项');
   c.ok(real.excluded.length >= 1, '不可安装的聚合仓必须在 excluded 里写明理由');
   c.ok(real.items.every((i) => i.probe && i.probe.kind === 'existence'), '默认探针必须全部是存在性检查（零执行）');
