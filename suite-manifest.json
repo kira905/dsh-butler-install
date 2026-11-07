@@ -83,12 +83,12 @@
     },
     {
       "name": "@kira905/dsh-butler-engine",
-      "versionRange": "^0.1.0",
+      "versionRange": "^0.2.0",
       "type": "cli",
       "group": "CLI",
       "aliases": ["调度内核", "自治引擎"],
       "probe": { "kind": "existence", "cmd": "butler-tickd" },
-      "note": "真常驻调度的内核（作业表 + 单实例锁 + 放行矩阵 + 哈希链审计）。⚠️ 装完一条作业都不会自己跑：它不附带作业脚本，默认全关，要哪条自己在配置里放行。"
+      "note": "常驻调度内核 + 日报/巡检工具集（作业表 / 单实例锁 / 放行矩阵 / 哈希链审计 + 六个只读工具 + 通知注入点）。⚠️ 装完一条作业都不会自己跑：它不附带作业脚本，默认全关；通知也只给注入点，不带任何具体通道。"
     },
     {
       "name": "@kira905/dsh-session-toolkit",
