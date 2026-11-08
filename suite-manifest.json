@@ -65,7 +65,7 @@
     },
     {
       "name": "@kira905/dsh-task-board-local",
-      "versionRange": "^1.1.5",
+      "versionRange": "^1.2.0",
       "type": "plugin",
       "group": "界面",
       "mount": "auto",
@@ -76,7 +76,7 @@
       "probe": {
         "kind": "existence"
       },
-      "note": "看板界面插件：从上游任务看板插件 fork 出来、已与上游脱钩，装完侧边栏出现「任务看板」（宿主半 + 浏览器半都在包内）。它只带 1 个运行时依赖（schemastery），peer 依赖 react 由宿主自带，别再单独装。⚠️ 它与官方任务看板插件抢同一个位置，二选一；装之前先看 profile 的组合列表里有没有官方那份，两个都挂上会互相顶。⚠️ 界面在它、命令行不在它 —— 那 30 个看板命令（board-card / board-card-run / board-act …）在另一条 @kira905/dsh-board-toolkit 里，要命令行就两条都装。下界钉在 1.1.5 有据：1.1.5（2026-10-19）是当前 npm latest，发布件自带 dsh.bundle（patch 指向 ./cordis.patch.yml）+ dsh.client，装进 profile 就会被挂载，本项按「必须挂载」判；0.0.0-stage / 1.1.4 没逐一核过，别往回降。"
+      "note": "看板界面插件：从上游任务看板插件 fork 出来、已与上游脱钩，装完侧边栏出现「任务看板」（宿主半 + 浏览器半都在包内）。它只带 1 个运行时依赖（schemastery），peer 依赖 react 由宿主自带，别再单独装。⚠️ 它与官方任务看板插件抢同一个位置，二选一；装之前先看 profile 的组合列表里有没有官方那份，两个都挂上会互相顶。⚠️ 界面在它、命令行不在它 —— 那 30 个看板命令（board-card / board-card-run / board-act …）在另一条 @kira905/dsh-board-toolkit 里，要命令行就两条都装。下界钉在 1.2.0 有据：1.2.0（2026-11-09）是当前 npm latest，内容 = 本机生产在跑的同一份；**1.1.5 在 0.2.2 线上是坏的** —— 宿主半没挂载，面板红条 `Unexpected token 'o', \"not found\" is not valid JSON`、五列全空（1.1.5 的 dsh.client 少声明 @deepseek-ai/dsh-api-remotes，也没声明 dsh-host-adapter-client 为 external）。1.2.0 隔离实测：profile 只装本包（旧的同功能副本挪走），`GET /api/task-board/state` 200 + 真实账本 212 张卡，侧边栏面板五列有数据。0.0.0-stage / 1.1.4 / 1.1.5 都别往回降。"
     },
     {
       "name": "@kira905/dsh-butler-panel",

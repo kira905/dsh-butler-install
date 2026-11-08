@@ -7,6 +7,20 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/); versions
 
 （暂无）
 
+## [0.3.27] - 2026-11-09
+
+> 一句话：**修 A-8 关 2 的阻断** —— 新人装完清单、打开面板，看板红条
+> `Host 操作失败：Unexpected token 'o', "not found" is not valid JSON`、五列全空。
+> 根因不在端口也不在账本：清单钉的 **1.1.5 在 0.2.2 线上宿主半没挂载**（`dsh.client.inject` 少声明
+> `@deepseek-ai/dsh-api-remotes`、也没把 `dsh-host-adapter-client` 声明为 `external`），而这条线
+> 上真正在跑的是另一份 1.2.0。修法 = 把那份 1.2.0 收进开源仓、发 npm，本清单下界跟一格。
+
+- `suite-manifest.json`：`@kira905/dsh-task-board-local` `^1.1.5` → `^1.2.0`，note 写清 1.1.5 在 0.2.x 上坏在哪。
+- 同批发布：`@kira905/dsh-task-board-local@1.2.0`（归档页 / 多实例 / 收件箱 / 删搬闸 / 客户端 external）。
+- 重建 `dist/dsh-butler-install-0.3.27-win-x64.exe`（内嵌清单逐字节更新）。
+- 判据：隔离 profile **只装 1.2.0**（旧的同功能副本挪走）⇒ `GET /api/task-board/state` 200 + 真实账本 212 张卡 +
+  侧边栏面板五列有数据（截图 `_archive\a8-e2e-20261109\shots\s13-board-scoped-120.jpg`）；`verify-release` 三包全过。
+
 ## [0.3.26] - 2026-11-09
 
 > 一句话：**修 A-8 关 1 的硬阻断** —— 清单第 17 项在**任何**全新全局前缀下必挂，因为
