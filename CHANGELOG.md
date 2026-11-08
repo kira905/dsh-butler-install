@@ -7,6 +7,18 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/); versions
 
 （暂无）
 
+## [0.3.25] - 2026-11-09
+
+> 一句话：engine 补了个 **0.5.2**（回修：把通道痕迹从公开包清掉 —— 撤回一个撞「通道不开源」红线的判定件、
+> 另一件的登记表与注释全中性化），panel 跟一个 **0.9.3**（对应那一件的显式降级话术）。
+> 闸④ 口径 = 清单下界与实体版本逐字对齐，所以两条下界一起跟。
+
+- `suite-manifest.json`：`@kira905/dsh-butler-engine` `^0.5.1` → `^0.5.2`；
+  `@kira905/dsh-butler-panel` `^0.9.2` → `^0.9.3`。
+- `test/fixtures/npm-latest-snapshot.json`：engine `0.5.2` / panel `0.9.3`（发布后现取，`capturedAt` 同步）。
+- 重建 `dist/dsh-butler-install-0.3.25-win-x64.exe`（内嵌清单逐字节更新）。
+- 判据：`npm test` 全过；`verify-release` 五道闸全过（含 exe 内嵌清单逐字节比对）。
+
 ## [0.3.24] - 2026-11-09
 
 > 一句话：engine 补了个 **0.5.1**（只订正 `examples/first-run.json`：`barewatch` 撤出首开组 ——
