@@ -138,7 +138,7 @@
     },
     {
       "name": "@kira905/dsh-butler-engine",
-      "versionRange": "^0.3.0",
+      "versionRange": "^0.3.1",
       "type": "cli",
       "group": "CLI",
       "aliases": [
