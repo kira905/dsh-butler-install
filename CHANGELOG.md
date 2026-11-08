@@ -7,6 +7,16 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/); versions
 
 （暂无）
 
+## [0.3.22] - 2026-11-09
+
+> 一句话：**engine 下界再跟一格到 `^0.4.1`（0.4.1 是 0.4.0 的文档计数订正版），erify-release 闸④ 要求下界与实体版本对齐。
+
+### Changed
+
+- `suite-manifest.json`：`@kira905/dsh-butler-engine` `^0.4.0` → **`^0.4.1`**。
+- `test/fixtures/npm-latest-snapshot.json` 再刷一次（engine 0.4.0 → 0.4.1）。
+- exe 重建（`dsh-butler-install-0.3.22-win-x64.exe`，内嵌清单逐字节相同）。
+
 ## [0.3.21] - 2026-11-09
 
 > 一句话：**调度内核下界跟到 `^0.4.0`**（那一版开始随包附带作业脚本），顺带把管家面板下界补到 `^0.9.1`。
