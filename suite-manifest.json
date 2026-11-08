@@ -9,8 +9,13 @@
       "type": "plugin",
       "group": "核心",
       "mount": "auto",
-      "aliases": ["面板", "生态面板"],
-      "probe": { "kind": "existence" },
+      "aliases": [
+        "面板",
+        "生态面板"
+      ],
+      "probe": {
+        "kind": "existence"
+      },
       "note": "只读体检面板（服务端 + 客户端）。排在最前面装：后面装的东西对不对，靠它看。装完即挂载，不需要写 cordis.patch.yml。"
     },
     {
@@ -19,8 +24,13 @@
       "type": "plugin",
       "group": "界面",
       "mount": "auto",
-      "aliases": ["归档", "会话归档"],
-      "probe": { "kind": "existence" },
+      "aliases": [
+        "归档",
+        "会话归档"
+      ],
+      "probe": {
+        "kind": "existence"
+      },
       "note": "会话归档界面（服务端 + 客户端）。装完即挂载。"
     },
     {
@@ -29,8 +39,13 @@
       "type": "plugin",
       "group": "界面",
       "mount": "auto",
-      "aliases": ["标题", "会话标题"],
-      "probe": { "kind": "existence" },
+      "aliases": [
+        "标题",
+        "会话标题"
+      ],
+      "probe": {
+        "kind": "existence"
+      },
       "note": "服务端插件：会话标题随内容实时更新。装完即挂载。⚠️ 下界钉在 0.2.7 有据：0.2.4–0.2.6 把消息的 source 写成 v4 已退役的 { kind: 'plugin', plugin: … }，而 DSH 0.2.1+ 的会话日志 v4 准入硬拒 source.kind === 'plugin'；它写的 session/title-llm-request 事件的 messages 正好在校验扫描列表里，于是每一个会话开起来 1–5 秒就 failed，坏行还让「查看会话」报 format v4 message requires a producer-owned source kind。0.2.7 是修复版。区间写成 ^0.2.5 理论上也解析得到 0.2.7，但用户机器上有缓存 / lockfile / 代理快照时可能落到坏版本 —— 必须从区间上硬排除，别把下界往回改。"
     },
     {
@@ -39,8 +54,13 @@
       "type": "plugin",
       "group": "界面",
       "mount": "manual",
-      "aliases": ["宿主适配"],
-      "probe": { "kind": "existence", "cmd": "dsh-host-adapter-deploy" },
+      "aliases": [
+        "宿主适配"
+      ],
+      "probe": {
+        "kind": "existence",
+        "cmd": "dsh-host-adapter-deploy"
+      },
       "note": "只有客户端半，刻意不带 dsh.bundle：装进 profile 时会得到一行 declares no dsh.bundle 提示，这是设计如此、不是故障。真正的挂载由它自带的部署命令完成，本工具不替它挂，也不把它判红。"
     },
     {
@@ -49,8 +69,13 @@
       "type": "plugin",
       "group": "界面",
       "mount": "auto",
-      "aliases": ["任务看板", "看板界面"],
-      "probe": { "kind": "existence" },
+      "aliases": [
+        "任务看板",
+        "看板界面"
+      ],
+      "probe": {
+        "kind": "existence"
+      },
       "note": "看板界面插件：从上游任务看板插件 fork 出来、已与上游脱钩，装完侧边栏出现「任务看板」（宿主半 + 浏览器半都在包内）。它只带 1 个运行时依赖（schemastery），peer 依赖 react 由宿主自带，别再单独装。⚠️ 它与官方任务看板插件抢同一个位置，二选一；装之前先看 profile 的组合列表里有没有官方那份，两个都挂上会互相顶。⚠️ 界面在它、命令行不在它 —— 那 30 个看板命令（board-card / board-card-run / board-act …）在另一条 @kira905/dsh-board-toolkit 里，要命令行就两条都装。下界钉在 1.1.5 有据：1.1.5（2026-10-19）是当前 npm latest，发布件自带 dsh.bundle（patch 指向 ./cordis.patch.yml）+ dsh.client，装进 profile 就会被挂载，本项按「必须挂载」判；0.0.0-stage / 1.1.4 没逐一核过，别往回降。"
     },
     {
@@ -59,8 +84,13 @@
       "type": "plugin",
       "group": "界面",
       "mount": "auto",
-      "aliases": ["管家面板", "大管家面板"],
-      "probe": { "kind": "existence" },
+      "aliases": [
+        "管家面板",
+        "大管家面板"
+      ],
+      "probe": {
+        "kind": "existence"
+      },
       "note": "大管家面板：生态总览 / 任务 / 日报周报 / 资产，一屏看完（宿主半 + 浏览器半都在包内，装完即挂载）。浏览器端依赖 @kira905/dsh-host-adapter-client（上面那条单列了，两条都装才有界面）。⚠️ 包里刻意不带任何图片：仓内 271 张截图是视觉回归基线、画面里含内部信息，一律不进货。⚠️ 别和 @kira905/dsh-ecosystem-panel 搞混：生态面板是「只读体检」，管家面板是「日常操作」。"
     },
     {
@@ -69,8 +99,12 @@
       "type": "plugin",
       "group": "记忆",
       "mount": "auto",
-      "aliases": ["记忆"],
-      "probe": { "kind": "existence" },
+      "aliases": [
+        "记忆"
+      ],
+      "probe": {
+        "kind": "existence"
+      },
       "note": "记忆工具：自带一份记忆实现（子包 dsh-memory-local）+ 19 条命令行（4 条 dsh-memory-audit / export / summary / lineage + 15 条引擎 CLI，前缀 dsh-mem-：selfcheck / sync / sweep / recall / serve-start / doc-index* / layer-migrate / layer-move / band-sentinel / domain-tags / distill* / pitfall-hook）。它与官方记忆插件抢同一个位置，二选一；装之前先看 profile 的组合列表里有没有官方那份。下界钉在 0.5.1 有据：0.5.1 起那 15 条引擎 CLI 才有 bin（此前只能 node memory-engine/cli/<名>.mjs 敲，敲不出来），且修了 13 个脚本缺 shebang 导致 npm shim 无解释器的坑（已发的 dsh-memory-summary 因此一直是坏的）；再早些的 0.2.0 起主包自己带 dsh.bundle（patch 指向 ./cordis.patch.yml），装进 profile 就会被挂载，本项按「必须挂载」判 —— 两条理由取严的就是 0.5.1。⚠️ 0.x 的插入号只吃补丁号，0.5.0 → 0.5.1 这种补丁级区间变化旧区间不会自动接受（^0.5.0 本身接受 0.5.1，所以本条其实自愈；跨小版本 0.1.x → 0.2.0 那种才不自愈）—— 想让它变绿只能改区间。"
     },
     {
@@ -78,8 +112,13 @@
       "versionRange": "^0.1.3",
       "type": "cli",
       "group": "CLI",
-      "aliases": ["看板"],
-      "probe": { "kind": "existence", "cmd": "board-card" },
+      "aliases": [
+        "看板"
+      ],
+      "probe": {
+        "kind": "existence",
+        "cmd": "board-card"
+      },
       "note": "任务看板的命令行工具集。装它 = npm i -g，不进组合列表，那条 declares no dsh.bundle 提示是正常现象。"
     },
     {
@@ -87,17 +126,29 @@
       "versionRange": "^0.3.0",
       "type": "cli",
       "group": "CLI",
-      "aliases": ["核心", "大管家核心"],
-      "probe": { "kind": "existence", "cmd": "ops-tickd" },
+      "aliases": [
+        "核心",
+        "大管家核心"
+      ],
+      "probe": {
+        "kind": "existence",
+        "cmd": "ops-tickd"
+      },
       "note": "大管家的调度与记账命令。注意 ops-tickd 是常驻调度，装完不是跑一次就完。"
     },
     {
       "name": "@kira905/dsh-butler-engine",
-      "versionRange": "^0.2.2",
+      "versionRange": "^0.3.0",
       "type": "cli",
       "group": "CLI",
-      "aliases": ["调度内核", "自治引擎"],
-      "probe": { "kind": "existence", "cmd": "butler-tickd" },
+      "aliases": [
+        "调度内核",
+        "自治引擎"
+      ],
+      "probe": {
+        "kind": "existence",
+        "cmd": "butler-tickd"
+      },
       "note": "常驻调度内核 + 日报/巡检工具集（作业表 / 单实例锁 / 放行矩阵 / 哈希链审计 + 六个只读工具 + 通知注入点）。⚠️ 装完一条作业都不会自己跑：它不附带作业脚本，默认全关；通知也只给注入点，不带任何具体通道。"
     },
     {
@@ -105,8 +156,13 @@
       "versionRange": "^0.1.2",
       "type": "cli",
       "group": "CLI",
-      "aliases": ["会话"],
-      "probe": { "kind": "existence", "cmd": "dsh-session-tail" },
+      "aliases": [
+        "会话"
+      ],
+      "probe": {
+        "kind": "existence",
+        "cmd": "dsh-session-tail"
+      },
       "note": "会话读取 / 落地 / 归档的命令行工具。"
     },
     {
@@ -114,8 +170,13 @@
       "versionRange": "^0.1.1",
       "type": "cli",
       "group": "CLI",
-      "aliases": ["网络"],
-      "probe": { "kind": "existence", "cmd": "dsh-wol" },
+      "aliases": [
+        "网络"
+      ],
+      "probe": {
+        "kind": "existence",
+        "cmd": "dsh-wol"
+      },
       "note": "网络类命令：唤醒、浏览器抓取、本地网关桥。"
     },
     {
@@ -123,8 +184,13 @@
       "versionRange": "^0.1.1",
       "type": "cli",
       "group": "CLI",
-      "aliases": ["笔记"],
-      "probe": { "kind": "existence", "cmd": "dsh-notekit-apply" },
+      "aliases": [
+        "笔记"
+      ],
+      "probe": {
+        "kind": "existence",
+        "cmd": "dsh-notekit-apply"
+      },
       "note": "笔记库套用的命令行工具。"
     },
     {
@@ -132,8 +198,14 @@
       "versionRange": "^0.1.1",
       "type": "cli",
       "group": "体检",
-      "aliases": ["小护士", "体检"],
-      "probe": { "kind": "existence", "cmd": "dsh-nurse-verify" },
+      "aliases": [
+        "小护士",
+        "体检"
+      ],
+      "probe": {
+        "kind": "existence",
+        "cmd": "dsh-nurse-verify"
+      },
       "note": "日常体检 / 采集 / 归档 / 回滚的命令行工具。"
     },
     {
@@ -141,8 +213,13 @@
       "versionRange": "^0.1.4",
       "type": "cli",
       "group": "体检",
-      "aliases": ["急救"],
-      "probe": { "kind": "existence", "cmd": "firstaid" },
+      "aliases": [
+        "急救"
+      ],
+      "probe": {
+        "kind": "existence",
+        "cmd": "firstaid"
+      },
       "note": "急救台与回滚演练的命令行工具。"
     },
     {
@@ -150,8 +227,13 @@
       "versionRange": "^0.1.2",
       "type": "cli",
       "group": "体检",
-      "aliases": ["运维"],
-      "probe": { "kind": "existence", "cmd": "dsh-bootstrap" },
+      "aliases": [
+        "运维"
+      ],
+      "probe": {
+        "kind": "existence",
+        "cmd": "dsh-bootstrap"
+      },
       "note": "开机自检、升级体检、夜间保护、快照等运维命令。"
     },
     {
@@ -159,8 +241,13 @@
       "versionRange": "^0.3.0",
       "type": "cli",
       "group": "体检",
-      "aliases": ["质量"],
-      "probe": { "kind": "existence", "cmd": "rulecheck" },
+      "aliases": [
+        "质量"
+      ],
+      "probe": {
+        "kind": "existence",
+        "cmd": "rulecheck"
+      },
       "note": "文档与代码的一致性检查命令集。主包是命令行工具；它还带一个默认关的插件子包（private，随主包 tarball 一起到），要启用得自己往 profile 的 cordis.patch.yml 里插一行。"
     },
     {
@@ -168,8 +255,13 @@
       "versionRange": "^0.1.2",
       "type": "cli",
       "group": "体检",
-      "aliases": ["闭包"],
-      "probe": { "kind": "existence", "cmd": "closure-check" },
+      "aliases": [
+        "闭包"
+      ],
+      "probe": {
+        "kind": "existence",
+        "cmd": "closure-check"
+      },
       "note": "依赖闭包的体检与修复命令。"
     },
     {
@@ -177,8 +269,14 @@
       "versionRange": "^0.1.2",
       "type": "cli",
       "group": "体检",
-      "aliases": ["对账", "诊断"],
-      "probe": { "kind": "existence", "cmd": "dsh-why" },
+      "aliases": [
+        "对账",
+        "诊断"
+      ],
+      "probe": {
+        "kind": "existence",
+        "cmd": "dsh-why"
+      },
       "note": "会话图片对账、一次取全的诊断命令。"
     }
   ],
@@ -186,7 +284,10 @@
     {
       "id": "dsh-diagnostic-tools",
       "reason": "历史聚合仓，仓根没有 package.json，不是可安装的包；它里面两份子目录包的包名在 npm 上都取不到，且其中一个与已发布的作用域包同名不同域。别 git clone 它当安装源（会得到第二份来源）。要的这两件本清单已经单列了，装上即可。",
-      "installInstead": ["@kira905/dsh-closure-tools", "@kira905/dsh-diagnostics-extra"]
+      "installInstead": [
+        "@kira905/dsh-closure-tools",
+        "@kira905/dsh-diagnostics-extra"
+      ]
     },
     {
       "id": "dsh-life-toolkit",
