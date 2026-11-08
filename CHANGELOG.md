@@ -7,6 +7,14 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/); versions
 
 （暂无）
 
+## [0.3.23] - 2026-11-09
+
+> 一句话：**把 engine 下界跟到 `^0.5.0`、面板下界跟到 `^0.9.2`**，对应「面板在只有 npm 包、没有私有工具目录的机器上也能出真数据」那一批（engine 0.5.0 补了 8 个库模块 + `examples/first-run.json`；panel 0.9.2 加了多路回落）。闸④ 口径 = 清单下界与实体版本逐字对齐，所以下界必须跟着实体走。
+
+- `suite-manifest.json`：`@kira905/dsh-butler-engine` `^0.4.1` → `^0.5.0`；`@kira905/dsh-butler-panel` `^0.9.1` → `^0.9.2`。
+- 重建 `dist/dsh-butler-install-0.3.23-win-x64.exe`（内嵌清单随之更新）。
+- 判据：`npm test` 全过（含「清单 vs registry 漂移」那条 —— 发布前红、发布后转绿，本次按发布后读数）；`verify-release` 五道闸 5/5。
+
 ## [0.3.22] - 2026-11-09
 
 > 一句话：**engine 下界再跟一格到 `^0.4.1`（0.4.1 是 0.4.0 的文档计数订正版），erify-release 闸④ 要求下界与实体版本对齐。
