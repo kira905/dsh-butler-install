@@ -3,6 +3,31 @@
 All notable changes to this project are documented here.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/); versions follow SemVer.
 
+## [0.3.28] - 2026-11-09
+
+> 一句话：**修 A-8 关 4（载体与指引）** —— 桌面版装完终于能看见管家面板；
+> 面板/生态面板自己会写"缺哪个模块 / 该改哪个文件 / 改完怎么验证"。
+
+### 清单变更
+
+- `@kira905/dsh-host-adapter-client` **下界 `^0.1.2` → `^0.2.0`，`mount` 从 `manual` 改 `auto`。**
+  0.2.0 起它自带 `dsh.bundle.patch`，装进 profile 就被宿主自己挂上；0.1.x 靠
+  `dsh-host-adapter-deploy` 往 profile 的 `cordis.patch.yml` 插一行，而那条命令写死
+  `profiles/web` ⇒ 桌面版（`profiles/desktop`）永远挂不上 ⇒ 声明了 external 的管家面板
+  同步 require 必 MISS ⇒ **侧边栏连入口都不出现，且没有任何报错**（A-8 关 4 真机实测）。
+- `@kira905/dsh-butler-panel` 下界 `^0.9.3` → `^0.9.5`：0.9.4 修了挂载条目与 require 的名字，
+  但客户端模块 `id` 还写着不带 scope 的旧名 ⇒ 桌面版**启动即弹「应用无法启动」**；0.9.5 修掉。
+  ⚠️ 0.9.4 不要用。
+- `@kira905/dsh-ecosystem-panel` 下界 `^0.5.1` → `^0.5.5`：默认读**当前** profile（不再写死 web），
+  新增「客户端装配」类目（四类病灶各给三段人话）。
+
+### 已知阻断（本版未修，归别的卡）
+
+- `@kira905/dsh-task-board-local@1.2.0` 的客户端写死 `require("dsh-host-adapter-client")`（不带 scope），
+  而注册表装来的适配层真名带 scope ⇒ 同步 require MISS ⇒ 宿主报
+  `web boot: 1 entry did not activate` ⇒ **桌面版直接起不来**。剔除看板后一切正常。
+  修法见交付报告 `docs\交付报告-A8关4-载体与指引-20261109.md` 的「待拍板」第 1 条。
+
 ## [Unreleased]
 
 （暂无）

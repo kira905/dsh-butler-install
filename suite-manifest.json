@@ -5,7 +5,7 @@
   "items": [
     {
       "name": "@kira905/dsh-ecosystem-panel",
-      "versionRange": "^0.5.1",
+      "versionRange": "^0.5.5",
       "type": "plugin",
       "group": "核心",
       "mount": "auto",
@@ -50,10 +50,10 @@
     },
     {
       "name": "@kira905/dsh-host-adapter-client",
-      "versionRange": "^0.1.2",
+      "versionRange": "^0.2.0",
       "type": "plugin",
       "group": "界面",
-      "mount": "manual",
+      "mount": "auto",
       "aliases": [
         "宿主适配"
       ],
@@ -61,7 +61,7 @@
         "kind": "existence",
         "cmd": "dsh-host-adapter-deploy"
       },
-      "note": "只有客户端半，刻意不带 dsh.bundle：装进 profile 时会得到一行 declares no dsh.bundle 提示，这是设计如此、不是故障。真正的挂载由它自带的部署命令完成，本工具不替它挂，也不把它判红。"
+      "note": "客户端适配层：把 SVC/EV 常量表以「client 面」放进宿主的 client boot graph，管家面板 / 任务看板靠它取服务名。⚠️ 0.2.0 起**自带 dsh.bundle.patch** ⇒ 装进 profile 就被宿主自己挂上，本工具按 mount=auto 判（「挂载」这一格必须 ✅）。0.1.x 是 mount=manual：靠 dsh-host-adapter-deploy 往 profile 的 cordis.patch.yml 插一行，而那条命令写死 profiles/web ⇒ 桌面版（profiles/desktop）永远挂不上，声明了 external 的面板同步 require 必 MISS、整块界面消失（2026-11-09 A-8 关 4 实测）。下界别往回改。"
     },
     {
       "name": "@kira905/dsh-task-board-local",
@@ -80,7 +80,7 @@
     },
     {
       "name": "@kira905/dsh-butler-panel",
-      "versionRange": "^0.9.3",
+      "versionRange": "^0.9.5",
       "type": "plugin",
       "group": "界面",
       "mount": "auto",
