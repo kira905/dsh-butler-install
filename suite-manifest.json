@@ -224,7 +224,7 @@
     },
     {
       "name": "@kira905/dsh-ops-toolkit",
-      "versionRange": "^0.1.2",
+      "versionRange": "^0.2.0",
       "type": "cli",
       "group": "体检",
       "aliases": [
@@ -234,7 +234,7 @@
         "kind": "existence",
         "cmd": "dsh-bootstrap"
       },
-      "note": "开机自检、升级体检、夜间保护、快照等运维命令。"
+      "note": "开机自检、升级体检、夜间保护、快照，以及管家工具箱（锚点巡检/方案闸/自审/台账/归档/配置快照）。"
     },
     {
       "name": "@kira905/dsh-quality-toolkit",
