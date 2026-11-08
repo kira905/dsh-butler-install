@@ -7,6 +7,13 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/); versions
 
 （暂无）
 
+## [0.3.24] - 2026-11-09
+
+> 一句话：engine 补了个 **0.5.1**（只订正 `examples/first-run.json`：`barewatch` 撤出首开组 ——
+> 它 rc=0 但内部被组件版本门跳过），**闸④ 口径 = 清单下界与实体版本逐字对齐**，所以清单跟一格到 `^0.5.1`。
+
+- `suite-manifest.json`：`@kira905/dsh-butler-engine` `^0.5.0` → `^0.5.1`。
+- 重建 `dist/dsh-butler-install-0.3.24-win-x64.exe`（内嵌清单随之更新）。
 ## [0.3.23] - 2026-11-09
 
 > 一句话：**把 engine 下界跟到 `^0.5.0`、面板下界跟到 `^0.9.2`**，对应「面板在只有 npm 包、没有私有工具目录的机器上也能出真数据」那一批（engine 0.5.0 补了 8 个库模块 + `examples/first-run.json`；panel 0.9.2 加了多路回落）。闸④ 口径 = 清单下界与实体版本逐字对齐，所以下界必须跟着实体走。
