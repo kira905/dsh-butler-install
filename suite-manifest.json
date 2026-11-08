@@ -80,7 +80,7 @@
     },
     {
       "name": "@kira905/dsh-butler-panel",
-      "versionRange": "^0.9.0",
+      "versionRange": "^0.9.1",
       "type": "plugin",
       "group": "界面",
       "mount": "auto",
@@ -138,7 +138,7 @@
     },
     {
       "name": "@kira905/dsh-butler-engine",
-      "versionRange": "^0.3.1",
+      "versionRange": "^0.4.0",
       "type": "cli",
       "group": "CLI",
       "aliases": [
@@ -149,7 +149,7 @@
         "kind": "existence",
         "cmd": "butler-tickd"
       },
-      "note": "常驻调度内核 + 日报/巡检工具集（作业表 / 单实例锁 / 放行矩阵 / 哈希链审计 + 六个只读工具 + 通知注入点）。⚠️ 装完一条作业都不会自己跑：它不附带作业脚本，默认全关；通知也只给注入点，不带任何具体通道。"
+      "note": "常驻调度内核 + 日报/巡检工具集（作业表 / 单实例锁 / 放行矩阵 / 哈希链审计 + 六个只读工具 + 通知注入点）。0.4.0 起随包附带 30 个作业脚本（`jobs/` 目录，覆盖 41 条作业），但**默认全关**：脚本在位只代表能跑，跑不跑看开关。入口按三级解析（包内 jobs/ → 环境变量 BUTLER_JOBS_DIR → 内核位置），都不在就记 skipped-missing-src、不发红。通知仍然只给注入点，不带任何具体通道。"
     },
     {
       "name": "@kira905/dsh-session-toolkit",

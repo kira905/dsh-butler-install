@@ -7,6 +7,26 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/); versions
 
 （暂无）
 
+## [0.3.21] - 2026-11-09
+
+> 一句话：**调度内核下界跟到 `^0.4.0`**（那一版开始随包附带作业脚本），顺带把管家面板下界补到 `^0.9.1`。
+
+### Changed
+
+- `suite-manifest.json`：`@kira905/dsh-butler-engine` `^0.3.1` → **`^0.4.0`**。
+  引擎 0.4.0 起随包附带 30 个作业脚本（`jobs/`，覆盖 41 条作业），入口按三级解析
+  （包内 `jobs/` → 环境变量 `BUTLER_JOBS_DIR` → 内核位置），都不在就记 `skipped-missing-src` 且不发红。
+  **默认仍然全关** —— 脚本在位不等于在跑。
+- `suite-manifest.json`：`@kira905/dsh-butler-panel` `^0.9.0` → **`^0.9.1`**（下界落后一格，`verify-release` 闸④ 会判红）。
+- 引擎条目 note 改写：不再说"不附带作业脚本"，改成"附带但默认全关 + 三级解析"。
+- `test/fixtures/npm-latest-snapshot.json` 刷新到现网 latest。
+- exe 重建（内嵌清单与仓内逐字节相同）。
+
+### Note
+
+- 0.3.18 / 0.3.19 / 0.3.20 三版当时没有在这里补条目（仓内清单与 exe 都已跟进，只有变更记录缺行）；
+  本版补记这一条，不追溯回写那三版的正文。
+
 ## [0.3.17] - 2026-11-08
 
 > 一句话：**清单里 `@kira905/dsh-memory-toolkit` 下界跟上 `^0.5.2`**（那一版订正了命令表里三行「缺省是否动库」）。
