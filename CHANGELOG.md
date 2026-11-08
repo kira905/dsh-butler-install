@@ -7,6 +7,20 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/); versions
 
 （暂无）
 
+## [0.3.26] - 2026-11-09
+
+> 一句话：**修 A-8 关 1 的硬阻断** —— 清单第 17 项在**任何**全新全局前缀下必挂，因为
+> `dsh-quality-toolkit@0.3.0` 与 `dsh-ops-toolkit@0.2.0` 抢同一个 bin 名 `dsh-plan-gate`（npm 报
+> `EEXIST`，rc=3，整批装不完；反序装也一样）。修法 = quality 侧把那条命令改名成 **`dsh-plan-gate-qc`** 发 **0.3.1**，
+> 本清单下界跟一格 —— 不是「谁覆盖谁」，两份实现本来就不是同一样东西。
+
+- `suite-manifest.json`：`@kira905/dsh-quality-toolkit` `^0.3.0` → `^0.3.1`，note 写清为什么不能回退
+  （0.3.0 带撞名的 bin，回到 `^0.3.0` 等于把撞名版本重新放进范围）。
+- `test/fixtures/npm-latest-snapshot.json`：quality `0.3.1`（发布后现取，`capturedAt` 同步）。
+- 重建 `dist/dsh-butler-install-0.3.26-win-x64.exe`（内嵌清单逐字节更新）。
+- 判据：全新空前缀按清单 19 项整装 **rc=0 / 零 EEXIST**（连装两遍也过）；反序两条都 rc=0；
+  19 项 bin 表从 registry 现取的**交集为空**；`verify-release` 五道闸全过。
+
 ## [0.3.25] - 2026-11-09
 
 > 一句话：engine 补了个 **0.5.2**（回修：把通道痕迹从公开包清掉 —— 撤回一个撞「通道不开源」红线的判定件、

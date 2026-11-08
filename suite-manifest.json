@@ -238,7 +238,7 @@
     },
     {
       "name": "@kira905/dsh-quality-toolkit",
-      "versionRange": "^0.3.0",
+      "versionRange": "^0.3.1",
       "type": "cli",
       "group": "体检",
       "aliases": [
@@ -248,7 +248,7 @@
         "kind": "existence",
         "cmd": "rulecheck"
       },
-      "note": "文档与代码的一致性检查命令集。主包是命令行工具；它还带一个默认关的插件子包（private，随主包 tarball 一起到），要启用得自己往 profile 的 cordis.patch.yml 里插一行。"
+      "note": "文档与代码的一致性检查命令集。主包是命令行工具；它还带一个默认关的插件子包（private，随主包 tarball 一起到），要启用得自己往 profile 的 cordis.patch.yml 里插一行。⚠️ 下界钉在 0.3.1 有据：0.3.0 与 0.3.1 都是 24 个 bin，唯一差别是方案闸的命令名 —— 0.3.0 叫 dsh-plan-gate，与 @kira905/dsh-ops-toolkit@0.2.0 的 dsh-plan-gate 同名，两个包按本清单同批全局安装时第二个必报 npm EEXIST（file already exists …\\dsh-plan-gate.cmd）而整批装不完；0.3.1 把它改成 dsh-plan-gate-qc，两边并存。⇒ 别把下界往回改成 ^0.3.0，那会把撞名版本重新放进范围。"
     },
     {
       "name": "@kira905/dsh-closure-tools",

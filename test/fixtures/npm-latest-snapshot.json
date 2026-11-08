@@ -1,6 +1,6 @@
 {
   "_comment": "npm 上各包 latest 的取数快照，供 `node test/range-drift.mjs --offline <本文件>` 与 test/run-all.mjs 离线复核。刷新方式 = 逐包 `npm view <pkg> version` 后覆盖本文件；capturedAt 必须跟着改，它是这份数据「什么时候是真的」的唯一凭据。",
-  "capturedAt": "2026-11-08T19:14:23.390Z",
+  "capturedAt": "2026-11-08T20:33:38.588Z",
   "source": "npm view <pkg> version（真网络，逐包 19 项）",
   "registry": "https://registry.npmjs.org",
   "packages": {
@@ -20,7 +20,7 @@
     "@kira905/dsh-nurse": "0.1.1",
     "@kira905/dsh-firstaid": "0.1.4",
     "@kira905/dsh-ops-toolkit": "0.2.0",
-    "@kira905/dsh-quality-toolkit": "0.3.0",
+    "@kira905/dsh-quality-toolkit": "0.3.1",
     "@kira905/dsh-closure-tools": "0.1.2",
     "@kira905/dsh-diagnostics-extra": "0.1.2"
   }
