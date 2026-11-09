@@ -3,6 +3,26 @@
 All notable changes to this project are documented here.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/); versions follow SemVer.
 
+## [0.3.30] - 2026-11-09
+
+> 一句话：**0.3.28 那条「已知阻断」解除** —— 看板 1.2.1 修掉了客户端按裸名 require 适配层，
+> 只装注册表版清单的桌面 profile 装完不会再报 `web boot: 1 entry did not activate`。
+
+### 清单变更
+
+- `@kira905/dsh-task-board-local` 下界 `^1.2.0` → `^1.2.1`。1.2.0 的 `lib/client.js` 用私有树的
+  **裸名** `dsh-host-adapter-client` 去 require 适配层，而注册表装来的
+  `@kira905/dsh-host-adapter-client` 注册 id 带 scope ⇒ 宿主注入的 `require` 按 id 查 ⇒ 同步
+  require MISS ⇒ 整个 client entry 挂不上、宿主报 `web boot: 1 entry did not activate`、**桌面版
+  直接起不来**（剔除看板后一切正常）。1.2.1 主路改成 scoped 注册 id、裸名降为 `try` 内 fallback
+  （老 profile 里那份本地件仍是不带 scope 的名字，两边都认）；`dsh.client.external` 与构建的
+  `CLIENT_EXTERNALS` 同步声明两个名字。
+  ⚠️ 1.2.0 别往回降（注册表环境下桌面版起不来）。
+
+### 已解除的阻断
+
+- 0.3.28「已知阻断」那一条已修，见上。
+
 ## [0.3.29] - 2026-11-09
 
 > 一句话：**生态面板卡片宽度 780 → 680px**（窗口约 900px 时两侧留白太少，看着像贴着窗口撑满）。
