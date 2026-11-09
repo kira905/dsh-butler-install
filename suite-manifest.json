@@ -80,7 +80,7 @@
     },
     {
       "name": "@kira905/dsh-butler-panel",
-      "versionRange": "^0.9.5",
+      "versionRange": "^0.9.6",
       "type": "plugin",
       "group": "界面",
       "mount": "auto",

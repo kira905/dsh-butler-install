@@ -3,6 +3,25 @@
 All notable changes to this project are documented here.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/); versions follow SemVer.
 
+## [0.3.34] - 2026-11-09
+
+> 一句话：管家面板 0.9.5 → `^0.9.6`（面板自己那句「常见原因」被修对了：`Cannot find module` 不再被说成
+> 「装完没重启」，兜底也补上了 `DSH_WORKSPACE`）。**安装器逻辑仍是一处未改，只跟版本 + 重建 exe。**
+
+### 清单变更
+
+- `@kira905/dsh-butler-panel` `^0.9.5` → `^0.9.6`。
+
+### 为什么
+
+- 0.9.5 及以前，面板「🛑 模块开关」卡在 `DSH_WORKSPACE` 指错时会说「面板刚部署但 dsh 还没重启（GET /modules
+  返回 404）」—— 而那条接口其实回了 **200 + `Cannot find module '<路径>'`**。照那句话去重启是白折腾一轮，
+  真正该改的两个变量（`DSH_WORKSPACE` / `BUTLER_ROOT`）一个字都没提。0.9.6 把归因拆成两句：
+  真 404 才说"没重启"，`Cannot find module` 改成「找不到 <实际那个路径>：多为工作区或大管家目录指错」，
+  并并排写出两个变量 + 「改完需重启 DSH 才生效」。
+- 宿主侧那行 `[butler-panel] 缺 …` 兜底话术同源补了第三条出路 `DSH_WORKSPACE`（README 变量表里的第一顺位）。
+- 下界严格跟着 npm 实体走（闸④ 判据 = 清单下界 == npm latest）。
+
 ## [0.3.33] - 2026-11-09
 
 > 一句话：engine 再抬一格到 `^0.5.4`（0.5.3 的发布物里还剩一行私有脚本路径，解包扫才抓到，0.5.4 补掉）。
