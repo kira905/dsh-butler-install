@@ -3,6 +3,25 @@
 All notable changes to this project are documented here.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/); versions follow SemVer.
 
+## [0.3.32] - 2026-11-09
+
+> 一句话：引擎补两个「干净机器上装完就坏」的作业缺陷（`reconcile` 包内缺件 / `hot` 假设作者机器的
+> 私有备份树存在），清单下界跟着上抬。**安装器自身逻辑一处未改，只跟版本。**
+
+### 清单变更
+
+- `@kira905/dsh-butler-engine` `^0.5.2` → `^0.5.3`。
+
+### 为什么
+
+- 干净新机器上，`jobs/butler-reconcile.mjs` 必抛 `ERR_MODULE_NOT_FOUND`（它 import 的
+  `jobs/lib/reconcile.mjs` 从来没进过发布包），`hot` 必报 `repo-missing` 并**退出 1**
+  （它假设 `~/dsh-git-backup/dsh-workspace` 存在，而那是作者机器的布局，且**报错里不告诉人该设哪个变量**）。
+  两条都是 A-8 关 3「一条作业真跑起来」现跑抓到的。
+- 0.5.3 修完后同一条 `--once` 在隔离环境里：`reconcile` 与 `hot` 双双 `ok / exit 0 / runs 1`，
+  产物落盘**非空**且 mtime 是当次（读数见交付报告）。
+- `npm-latest-snapshot.json` 已按真网络刷新（19 项）。
+
 ## [0.3.31] - 2026-11-09
 
 > 一句话：三个 CLI 包各发一个 patch，把**发布物**里的私有痕迹（私有工具路径 / 私有授权细则档名 /
