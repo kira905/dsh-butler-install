@@ -5,8 +5,11 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import os from 'node:os';
 import { execFileSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
 
-const ROOT = 'D:/DSH-oss';
+// 仓根 = 本仓（dsh-butler-install）的上一级，即所有开源仓的公共父目录。
+// 构建机可用 OSS_ROOT 覆盖；不再写死本机磁盘路径。
+const ROOT = process.env.OSS_ROOT || path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const INST = `${ROOT}/dsh-butler-install`;
 const argv = process.argv.slice(2);
 const argOf = (k, d) => { const i = argv.indexOf(k); return i >= 0 ? argv[i + 1] : d; };
