@@ -5,7 +5,7 @@
   "items": [
     {
       "name": "@kira905/dsh-ecosystem-panel",
-      "versionRange": "^0.5.5",
+      "versionRange": "^0.5.6",
       "type": "plugin",
       "group": "核心",
       "mount": "auto",

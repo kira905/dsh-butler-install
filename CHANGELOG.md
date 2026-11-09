@@ -3,6 +3,15 @@
 All notable changes to this project are documented here.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/); versions follow SemVer.
 
+## [0.3.29] - 2026-11-09
+
+> 一句话：**生态面板卡片宽度 780 → 680px**（窗口约 900px 时两侧留白太少，看着像贴着窗口撑满）。
+> 纯 UI 值调整，不动任何判定逻辑；主人 2026-11-09 08:30 当面定的值。
+
+### 清单变更
+
+- `@kira905/dsh-ecosystem-panel` 下界 `^0.5.5` → `^0.5.6`。
+
 ## [0.3.28] - 2026-11-09
 
 > 一句话：**修 A-8 关 4（载体与指引）** —— 桌面版装完终于能看见管家面板；
