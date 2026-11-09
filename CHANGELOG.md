@@ -3,6 +3,22 @@
 All notable changes to this project are documented here.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/); versions follow SemVer.
 
+## [0.3.33] - 2026-11-09
+
+> 一句话：engine 再抬一格到 `^0.5.4`（0.5.3 的发布物里还剩一行私有脚本路径，解包扫才抓到，0.5.4 补掉）。
+> **安装器逻辑仍是一处未改，只跟版本 + 重建 exe。**
+
+### 清单变更
+
+- `@kira905/dsh-butler-engine` `^0.5.3` → `^0.5.4`。
+
+### 为什么
+
+- 0.5.3 的 tarball **解包后**逐文件扫出 `jobs/lib/entities.mjs` 注释里一条私有临时目录路径。仓内扫描抓不到、
+  `npm view` 更抓不到 —— 判据必须是「解开再 grep」。0.5.4 只清这一行，判定逻辑零变化。
+- 下界严格跟着 npm 实体走（闸④ 判据 = 清单下界 == npm latest），所以 0.5.3 → 0.5.4 这一步必须同步抬清单，
+  否则装出来的机器会停在带遗漏的那一版。
+
 ## [0.3.32] - 2026-11-09
 
 > 一句话：引擎补两个「干净机器上装完就坏」的作业缺陷（`reconcile` 包内缺件 / `hot` 假设作者机器的
