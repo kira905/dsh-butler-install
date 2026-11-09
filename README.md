@@ -154,9 +154,9 @@ npx @kira905/dsh-butler-install --ui --port 45090
 
 上面那套都要敲命令。**连 PowerShell 都不想开**的话，下载一个 exe 就行：
 
-> **下载地址**：https://pan.baidu.com/s/1RezIxD4LitmEJ9U1FtFqFQ?pwd=pamq（提取码 `pamq`；文件名 `dsh-butler-install-0.3.1-win-x64.exe`，约 89 MB · 93,149,184 B）
+> **下载地址**：https://pan.baidu.com/s/5O3WhpI2rH044pG372T4nCQ（无需提取码；里面是个文件夹 —— **取文件名里版本号最大的那个**，现在最新是 `dsh-butler-install-0.3.34-win-x64.exe`，约 89 MB · 93,187,072 B）
 >
-> 说明：**网盘上现在放的就是 0.3.1 这一版**（下载文件名以它为准）。比它新的版本会先在仓里出（`npm run build:exe`），
+> 说明：**网盘上现在最新的就是 0.3.34 这一版**。文件夹里还留着 0.3.32 / 0.3.33 这些老版，**别下老的** —— 认文件名里的版本号。比它新的版本会先在仓里出（`npm run build:exe`），
 > 重新上传网盘之后这里才会跟着更新 —— 文件名里的版本号要是没变，就说明网盘上还没更新的。
 
 用法就三步：
