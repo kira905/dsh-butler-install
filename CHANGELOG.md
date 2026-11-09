@@ -3,6 +3,22 @@
 All notable changes to this project are documented here.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/); versions follow SemVer.
 
+## [0.3.31] - 2026-11-09
+
+> 一句话：三个 CLI 包各发一个 patch，把**发布物**里的私有痕迹（私有工具路径 / 私有授权细则档名 /
+> 两个渠道品牌词 / 内部组件名）清干净；清单下界跟着上抬。
+
+### 清单变更
+
+- `@kira905/dsh-nurse` `^0.1.1` → `^0.1.2`
+- `@kira905/dsh-diagnostics-extra` `^0.1.2` → `^0.1.3`
+- `@kira905/dsh-board-toolkit` `^0.1.3` → `^0.1.4`
+
+三包都只动注释 / 说明字符串；`dsh-diagnostics-extra` 的 `REDLINE` 另去掉两个渠道品牌词
+（内部通知通道名 + 一个 IM 平台名），那是启发式判档面的变化 —— 这两个词不再单独被判成红线，
+其余词与整条启发式都保留，误判代价仍是清单多一行标注，不是决策。**无功能变更。**
+`npm-latest-snapshot.json` 已按真网络刷新（19 项）。
+
 ## [0.3.30] - 2026-11-09
 
 > 一句话：**0.3.28 那条「已知阻断」解除** —— 看板 1.2.1 修掉了客户端按裸名 require 适配层，

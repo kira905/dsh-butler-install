@@ -109,7 +109,7 @@
     },
     {
       "name": "@kira905/dsh-board-toolkit",
-      "versionRange": "^0.1.3",
+      "versionRange": "^0.1.4",
       "type": "cli",
       "group": "CLI",
       "aliases": [
@@ -195,7 +195,7 @@
     },
     {
       "name": "@kira905/dsh-nurse",
-      "versionRange": "^0.1.1",
+      "versionRange": "^0.1.2",
       "type": "cli",
       "group": "体检",
       "aliases": [
@@ -266,7 +266,7 @@
     },
     {
       "name": "@kira905/dsh-diagnostics-extra",
-      "versionRange": "^0.1.2",
+      "versionRange": "^0.1.3",
       "type": "cli",
       "group": "体检",
       "aliases": [
